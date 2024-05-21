@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
@@ -55,15 +56,16 @@ namespace jingkeyun.Windows
                         }
                         User.Good_id = item.goods_id;
                         User.Sku=item.sku_list[i];
-                        string skuName = "";
-                        foreach (var spec in item.sku_list[i].spec_details)
-                        {
-                            skuName += "/" + spec.spec_name;
-                        }
-                        if (!string.IsNullOrEmpty(skuName))
-                        {
-                            User.SkuName = skuName.Substring(1);
-                        }
+                        //string skuName = "";
+                        //foreach (var spec in item.sku_list[i].spec_details)
+                        //{
+                        //    skuName += "/" + spec.spec_name;
+                        //}
+                        //if (!string.IsNullOrEmpty(skuName))
+                        //{
+                        //    User.SkuName = skuName.Substring(1);
+                        //}
+                        User.SkuName = item.sku_list[i].spec;
                         User.market_price= Convert.ToInt64(model.market_price)/100.00;
                         User.mallinfo=item.Mallinfo;
                         var sku= model.sku_list.FirstOrDefault(x => x.sku_id == item.sku_list[i].sku_id);
@@ -86,29 +88,15 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
-
-            uiButton3.StyleCustomMode = true;
-            uiButton3.Style = UIStyle.Custom;
-            uiButton3.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton4.StyleCustomMode = true;
-            uiButton4.Style = UIStyle.Custom;
-            uiButton4.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton5.StyleCustomMode = true;
-            uiButton5.Style = UIStyle.Custom;
-            uiButton5.FillColor = Color.FromArgb(119, 40, 245);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
+            StyleHelper.SetButtonColor(uiButton3, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton4, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton5, StyleHelper.OkButton);
 
             uiIntegerUpDown1.StyleCustomMode= true;
             uiIntegerUpDown1.Style = UIStyle.Purple;
@@ -204,9 +192,8 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
+            if (MyMessageBox.ShowAsk("是否提交修改？"))
             {
-                new UIPage().ShowProcessForm();
                 //获取提交请求列表
                 List<requsetSkuPriceModel> models = new List<requsetSkuPriceModel>();
                 requsetSkuPriceModel model = new requsetSkuPriceModel();
@@ -229,13 +216,13 @@ namespace jingkeyun.Windows
                     if (model.market_price <= User.price*100)
                     {
                         new UIPage().HideProcessForm();
-                        UIMessageBox.ShowError("参考价必须大于单价！");
+                        MyMessageBox.ShowError("参考价必须大于单价！");
                         return;
                     }
                     if (User.mPrice > User.price - 1)
                     {
                         new UIPage().HideProcessForm();
-                        UIMessageBox.ShowError("拼单价需比单买价低至少1元！");
+                        MyMessageBox.ShowError("拼单价需比单买价低至少1元！");
                         return;
                     }
                     model.goods_id = User.Good_id;
@@ -251,14 +238,14 @@ namespace jingkeyun.Windows
                 if (backMsg.Code == 0)
                 {
                     new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
+                    MyMessageBox.ShowSuccess("修改成功！");
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
                     new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
+                    MyMessageBox.ShowError("出现错误！" + backMsg.Mess);
                     return;
                 }
             }

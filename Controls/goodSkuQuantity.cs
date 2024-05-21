@@ -14,7 +14,6 @@ namespace jingkeyun.Controls
     public partial class goodSkuQuantity : UserControl
     {
 
-
         public Image Image
         {
             set

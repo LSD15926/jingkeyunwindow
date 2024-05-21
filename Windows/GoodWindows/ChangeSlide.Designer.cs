@@ -167,6 +167,8 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ChangeSlide";
+            this.ShowRect = false;
+            this.Style = Sunny.UI.UIStyle.Custom;
             this.Text = "批量改轮播图";
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);
             this.panel1.ResumeLayout(false);

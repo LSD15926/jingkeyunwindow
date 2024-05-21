@@ -44,17 +44,12 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel3.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
         }
         List<Mallinfo> mallinfos=new List<Mallinfo>();
         private void InitInfo()
@@ -62,7 +57,7 @@ namespace jingkeyun.Windows
             BackData ReadServerData = Mall_Info.get((int)InitUser.User.UserId);
             if (ReadServerData.Code != 0)
             {
-                UIMessageBox.Show("获取店铺失败！");
+                MyMessageBox.Show("获取店铺失败！");
                 return;
             }
             var json = JsonConvert.SerializeObject(ReadServerData.Data);
@@ -74,7 +69,7 @@ namespace jingkeyun.Windows
             backData = Mall_Group.List(InitUser.User.UserId);
             if (backData.Code != 0)
             {
-                UIMessageBox.ShowError("获取店铺分组出错！");
+                MyMessageBox.ShowError("获取店铺分组出错！");
                 return;
             }
             var json = JsonConvert.SerializeObject(backData.Data);
@@ -155,11 +150,11 @@ namespace jingkeyun.Windows
                 BackMsg msg=Mall_Info.Upd(mallinfo);
                 if (msg.Code != 0)
                 {
-                    UIMessageBox.ShowError("修改分组出错！"+msg.Mess);
+                    MyMessageBox.ShowError("修改分组出错！"+msg.Mess);
                     return;
                 }
             }
-            UIMessageBox.ShowSuccess("修改成功！");
+            MyMessageBox.ShowSuccess("修改成功！");
             //更新选中店铺
             this.DialogResult = DialogResult.OK;
             this.Close();

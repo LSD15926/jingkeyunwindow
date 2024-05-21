@@ -29,12 +29,10 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
 
 
         }
@@ -47,7 +45,7 @@ namespace jingkeyun.Windows
         {
             if (string.IsNullOrEmpty(uiTextBox1.Text))
             {
-                UIMessageBox.ShowError("请输入code！");
+                MyMessageBox.ShowError("请输入code！");
                 return;
             }
             BackMsg backMsg = new BackMsg();
@@ -65,7 +63,7 @@ namespace jingkeyun.Windows
             }
             else
             {
-                UIMessageBox.ShowError("获取授权失败!"+backMsg.Mess);
+                MyMessageBox.ShowError("获取授权失败!"+backMsg.Mess);
                 return;
             }
         }

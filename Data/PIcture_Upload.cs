@@ -101,7 +101,18 @@ namespace jingkeyun.Data
                 JToken jToken = JsonConvert.DeserializeObject<JToken>(resultJson);
                 if (jToken.ToString().Contains("error_response"))//存在错误信息跳出
                 {
-                    throw new Exception(jToken["error_response"].ToString());
+                    if (!string.IsNullOrEmpty(jToken["error_response"]["error_msg"].ToString()))
+                    {
+                        backMsg.Mess = "商品id:" + model.goods_id + "修改失败！错误信息：" + jToken["error_response"]["error_msg"].ToString();
+                    }
+                    else if (!string.IsNullOrEmpty(jToken["error_response"]["sub_msg"].ToString()))
+                    {
+                        backMsg.Mess = "商品id:" + model.goods_id + "修改失败！错误信息：" + jToken["error_response"]["sub_msg"].ToString();
+                    }
+                    else
+                    {
+                        backMsg.Mess = "商品id:" + model.goods_id + "修改失败！错误信息：" + jToken["error_response"].ToString();
+                    }
                 }
                 else
                 {

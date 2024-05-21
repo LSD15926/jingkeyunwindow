@@ -65,7 +65,7 @@
             this.panel1.Controls.Add(this.textBoxX2);
             this.panel1.Controls.Add(this.textBoxX1);
             this.panel1.Controls.Add(this.labelX1);
-            this.panel1.Location = new System.Drawing.Point(253, 60);
+            this.panel1.Location = new System.Drawing.Point(270, 130);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(348, 378);
             this.panel1.TabIndex = 0;
@@ -180,6 +180,7 @@
             this.uiButton1.Location = new System.Drawing.Point(37, 292);
             this.uiButton1.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiButton1.Name = "uiButton1";
+            this.uiButton1.Radius = 15;
             this.uiButton1.Size = new System.Drawing.Size(282, 42);
             this.uiButton1.TabIndex = 6;
             this.uiButton1.Text = "立即注册";
@@ -251,12 +252,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::jingkeyun.Properties.Resources._2a26b6e2_ef32_468c_8602_0614eb6037de;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(888, 503);
+            this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SignForm";
             this.Padding = new System.Windows.Forms.Padding(0);
+            this.ShowRect = false;
             this.ShowTitle = false;
             this.Text = "免费注册";
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);

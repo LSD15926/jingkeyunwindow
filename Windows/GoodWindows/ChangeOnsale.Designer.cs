@@ -44,35 +44,35 @@
             // uiLabel4
             // 
             this.uiLabel4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel4.Location = new System.Drawing.Point(29, 104);
             this.uiLabel4.Name = "uiLabel4";
             this.uiLabel4.Size = new System.Drawing.Size(100, 23);
             this.uiLabel4.TabIndex = 10;
             this.uiLabel4.Text = "商品状态：";
             this.uiLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel4.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiLabel1
             // 
             this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel1.Location = new System.Drawing.Point(29, 56);
             this.uiLabel1.Name = "uiLabel1";
             this.uiLabel1.Size = new System.Drawing.Size(100, 23);
             this.uiLabel1.TabIndex = 12;
             this.uiLabel1.Text = "已选商品：";
             this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiLabel2
             // 
             this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel2.Location = new System.Drawing.Point(111, 56);
             this.uiLabel2.Name = "uiLabel2";
             this.uiLabel2.Size = new System.Drawing.Size(100, 23);
             this.uiLabel2.TabIndex = 13;
             this.uiLabel2.Text = "0";
             this.uiLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel2.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiRadioButton1
             // 
@@ -86,7 +86,6 @@
             this.uiRadioButton1.Size = new System.Drawing.Size(150, 29);
             this.uiRadioButton1.TabIndex = 14;
             this.uiRadioButton1.Text = "上架";
-            this.uiRadioButton1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiRadioButton2
             // 
@@ -99,7 +98,6 @@
             this.uiRadioButton2.Size = new System.Drawing.Size(97, 29);
             this.uiRadioButton2.TabIndex = 15;
             this.uiRadioButton2.Text = "下架";
-            this.uiRadioButton2.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiSymbolButton1
             // 
@@ -112,7 +110,6 @@
             this.uiSymbolButton1.TabIndex = 2;
             this.uiSymbolButton1.Text = "uiSymbolButton1";
             this.uiSymbolButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiSymbolButton1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // panel2
             // 
@@ -136,7 +133,6 @@
             this.uiButton2.TabIndex = 6;
             this.uiButton2.Text = "取 消";
             this.uiButton2.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton2.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.uiButton2.Click += new System.EventHandler(this.uiButton2_Click);
             // 
             // uiButton1
@@ -151,7 +147,6 @@
             this.uiButton1.TabIndex = 5;
             this.uiButton1.Text = "提 交";
             this.uiButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.uiButton1.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // ChangeOnsale
@@ -165,7 +160,11 @@
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiLabel4);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ChangeOnsale";
+            this.ShowRect = false;
+            this.Style = Sunny.UI.UIStyle.Custom;
             this.Text = "批量上下架";
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);
             this.panel2.ResumeLayout(false);

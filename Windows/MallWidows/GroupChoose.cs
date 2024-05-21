@@ -1,4 +1,5 @@
-﻿using jingkeyun.Data;
+﻿using jingkeyun.Class;
+using jingkeyun.Data;
 using Pdd_Models;
 using Pdd_Models.Models;
 using Sunny.UI;
@@ -6,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using jingkeyun.Data;
 
 namespace jingkeyun.Windows
 {
@@ -92,13 +92,13 @@ namespace jingkeyun.Windows
             if (backMsg.Code == 0)
             {
 
-                UIMessageBox.ShowSuccess("修改成功！");
+                MyMessageBox.ShowSuccess("修改成功！");
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else
             {
-                UIMessageBox.ShowError("修改失败!" + backMsg.Mess);
+                MyMessageBox.ShowError("修改失败!" + backMsg.Mess);
                 return;
             }
 

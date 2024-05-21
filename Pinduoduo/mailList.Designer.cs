@@ -32,15 +32,6 @@ namespace jingkeyun.Pinduoduo
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
-            this.删除店铺ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.加入分组ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.uiSymbolButton6 = new Sunny.UI.UISymbolButton();
             this.uiSymbolButton5 = new Sunny.UI.UISymbolButton();
@@ -50,8 +41,6 @@ namespace jingkeyun.Pinduoduo
             this.uiLine1 = new Sunny.UI.UILine();
             this.label2 = new System.Windows.Forms.Label();
             this.uiProgressIndicator1 = new Sunny.UI.UIProgressIndicator();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.列表 = new System.Windows.Forms.DataGridView();
             this.uiSymbolButton8 = new Sunny.UI.UISymbolButton();
             this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.uiLine3 = new Sunny.UI.UILine();
@@ -59,55 +48,16 @@ namespace jingkeyun.Pinduoduo
             this.uiSymbolButton3 = new Sunny.UI.UISymbolButton();
             this.uiSymbolButton2 = new Sunny.UI.UISymbolButton();
             this.uiSymbolButton1 = new Sunny.UI.UISymbolButton();
-            this.分组菜单 = new Sunny.UI.UIContextMenuStrip();
-            this.修改分组ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.删除分组ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uiPanel2 = new Sunny.UI.UIPanel();
             this.uiPanel3 = new Sunny.UI.UIPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.uiLine4 = new Sunny.UI.UILine();
-            this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.pic = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Mall_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Mall_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Mall_Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.state = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Expire = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.操作 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.uiContextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.列表)).BeginInit();
-            this.分组菜单.SuspendLayout();
             this.uiPanel2.SuspendLayout();
             this.uiPanel3.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // uiContextMenuStrip1
-            // 
-            this.uiContextMenuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(249)))), ((int)(((byte)(255)))));
-            this.uiContextMenuStrip1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.删除店铺ToolStripMenuItem,
-            this.加入分组ToolStripMenuItem});
-            this.uiContextMenuStrip1.Name = "uiContextMenuStrip1";
-            this.uiContextMenuStrip1.Size = new System.Drawing.Size(145, 56);
-            // 
-            // 删除店铺ToolStripMenuItem
-            // 
-            this.删除店铺ToolStripMenuItem.Name = "删除店铺ToolStripMenuItem";
-            this.删除店铺ToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
-            this.删除店铺ToolStripMenuItem.Text = "删除店铺";
-            this.删除店铺ToolStripMenuItem.Click += new System.EventHandler(this.删除店铺ToolStripMenuItem_Click);
-            // 
-            // 加入分组ToolStripMenuItem
-            // 
-            this.加入分组ToolStripMenuItem.Name = "加入分组ToolStripMenuItem";
-            this.加入分组ToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
-            this.加入分组ToolStripMenuItem.Text = "修改分组";
-            this.加入分组ToolStripMenuItem.Click += new System.EventHandler(this.加入分组ToolStripMenuItem_Click);
             // 
             // timer1
             // 
@@ -123,7 +73,7 @@ namespace jingkeyun.Pinduoduo
             this.uiSymbolButton6.FillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(46)))), ((int)(((byte)(147)))));
             this.uiSymbolButton6.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolButton6.LightColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(242)))), ((int)(((byte)(251)))));
-            this.uiSymbolButton6.Location = new System.Drawing.Point(181, 52);
+            this.uiSymbolButton6.Location = new System.Drawing.Point(180, 52);
             this.uiSymbolButton6.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolButton6.Name = "uiSymbolButton6";
             this.uiSymbolButton6.RectColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
@@ -133,7 +83,7 @@ namespace jingkeyun.Pinduoduo
             this.uiSymbolButton6.Size = new System.Drawing.Size(81, 35);
             this.uiSymbolButton6.Style = Sunny.UI.UIStyle.Custom;
             this.uiSymbolButton6.StyleCustomMode = true;
-            this.uiSymbolButton6.Symbol = 80;
+            this.uiSymbolButton6.Symbol = 262189;
             this.uiSymbolButton6.TabIndex = 15;
             this.uiSymbolButton6.Text = "删分组";
             this.uiSymbolButton6.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -149,7 +99,7 @@ namespace jingkeyun.Pinduoduo
             this.uiSymbolButton5.FillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(46)))), ((int)(((byte)(147)))));
             this.uiSymbolButton5.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolButton5.LightColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(242)))), ((int)(((byte)(251)))));
-            this.uiSymbolButton5.Location = new System.Drawing.Point(97, 52);
+            this.uiSymbolButton5.Location = new System.Drawing.Point(95, 52);
             this.uiSymbolButton5.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolButton5.Name = "uiSymbolButton5";
             this.uiSymbolButton5.RectColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
@@ -159,7 +109,7 @@ namespace jingkeyun.Pinduoduo
             this.uiSymbolButton5.Size = new System.Drawing.Size(81, 35);
             this.uiSymbolButton5.Style = Sunny.UI.UIStyle.Custom;
             this.uiSymbolButton5.StyleCustomMode = true;
-            this.uiSymbolButton5.Symbol = 80;
+            this.uiSymbolButton5.Symbol = 61504;
             this.uiSymbolButton5.TabIndex = 14;
             this.uiSymbolButton5.Text = "改分组";
             this.uiSymbolButton5.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -231,9 +181,10 @@ namespace jingkeyun.Pinduoduo
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("微软雅黑", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.Location = new System.Drawing.Point(25, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 16);
+            this.label2.Size = new System.Drawing.Size(118, 24);
             this.label2.TabIndex = 7;
             this.label2.Text = "店铺分组列表";
             // 
@@ -241,95 +192,15 @@ namespace jingkeyun.Pinduoduo
             // 
             this.uiProgressIndicator1.Active = true;
             this.uiProgressIndicator1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiProgressIndicator1.Location = new System.Drawing.Point(460, 269);
+            this.uiProgressIndicator1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
+            this.uiProgressIndicator1.Location = new System.Drawing.Point(401, 218);
             this.uiProgressIndicator1.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiProgressIndicator1.Name = "uiProgressIndicator1";
             this.uiProgressIndicator1.Size = new System.Drawing.Size(100, 100);
+            this.uiProgressIndicator1.Style = Sunny.UI.UIStyle.Custom;
             this.uiProgressIndicator1.TabIndex = 171;
             this.uiProgressIndicator1.Text = "uiProgressIndicator1";
             this.uiProgressIndicator1.Visible = false;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox1.Location = new System.Drawing.Point(69, 12);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(15, 14);
-            this.checkBox1.TabIndex = 170;
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // 列表
-            // 
-            this.列表.AllowUserToAddRows = false;
-            this.列表.AllowUserToDeleteRows = false;
-            this.列表.AllowUserToResizeColumns = false;
-            this.列表.AllowUserToResizeRows = false;
-            this.列表.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCellsExceptHeader;
-            this.列表.BackgroundColor = System.Drawing.Color.White;
-            this.列表.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.列表.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            this.列表.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(253)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(114)))), ((int)(((byte)(114)))));
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightCyan;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.列表.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.列表.ColumnHeadersHeight = 30;
-            this.列表.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.列表.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.check,
-            this.pic,
-            this.Mall_Name,
-            this.Mall_Id,
-            this.Mall_Type,
-            this.state,
-            this.Expire,
-            this.操作,
-            this.model});
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.列表.DefaultCellStyle = dataGridViewCellStyle5;
-            this.列表.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.列表.EnableHeadersVisualStyles = false;
-            this.列表.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(239)))), ((int)(((byte)(243)))));
-            this.列表.Location = new System.Drawing.Point(0, 0);
-            this.列表.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
-            this.列表.Name = "列表";
-            this.列表.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(234)))), ((int)(((byte)(249)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.列表.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.列表.RowHeadersWidth = 50;
-            this.列表.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.列表.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
-            this.列表.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font(FontHelper.pfc.Families[0], 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.列表.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(144)))), ((int)(((byte)(144)))), ((int)(((byte)(144)))));
-            this.列表.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.列表.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(180)))), ((int)(((byte)(255)))));
-            this.列表.RowTemplate.Height = 75;
-            this.列表.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.列表.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.列表.Size = new System.Drawing.Size(1028, 714);
-            this.列表.TabIndex = 169;
-            this.列表.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.列表_CellEndEdit);
-            this.列表.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.列表_CellMouseDown);
             // 
             // uiSymbolButton8
             // 
@@ -341,7 +212,7 @@ namespace jingkeyun.Pinduoduo
             this.uiSymbolButton8.FillSelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(46)))), ((int)(((byte)(147)))));
             this.uiSymbolButton8.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolButton8.LightColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(242)))), ((int)(((byte)(251)))));
-            this.uiSymbolButton8.Location = new System.Drawing.Point(254, 49);
+            this.uiSymbolButton8.Location = new System.Drawing.Point(242, 49);
             this.uiSymbolButton8.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolButton8.Name = "uiSymbolButton8";
             this.uiSymbolButton8.RectColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
@@ -388,9 +259,10 @@ namespace jingkeyun.Pinduoduo
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("微软雅黑", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.Location = new System.Drawing.Point(25, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(103, 16);
+            this.label1.Size = new System.Drawing.Size(118, 24);
             this.label1.TabIndex = 6;
             this.label1.Text = "授权店铺列表";
             // 
@@ -475,30 +347,6 @@ namespace jingkeyun.Pinduoduo
             this.uiSymbolButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolButton1.Click += new System.EventHandler(this.uiButton3_Click);
             // 
-            // 分组菜单
-            // 
-            this.分组菜单.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(249)))), ((int)(((byte)(255)))));
-            this.分组菜单.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.分组菜单.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.修改分组ToolStripMenuItem,
-            this.删除分组ToolStripMenuItem});
-            this.分组菜单.Name = "uiContextMenuStrip1";
-            this.分组菜单.Size = new System.Drawing.Size(145, 56);
-            // 
-            // 修改分组ToolStripMenuItem
-            // 
-            this.修改分组ToolStripMenuItem.Name = "修改分组ToolStripMenuItem";
-            this.修改分组ToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
-            this.修改分组ToolStripMenuItem.Text = "编辑分组";
-            this.修改分组ToolStripMenuItem.Click += new System.EventHandler(this.修改分组ToolStripMenuItem_Click);
-            // 
-            // 删除分组ToolStripMenuItem
-            // 
-            this.删除分组ToolStripMenuItem.Name = "删除分组ToolStripMenuItem";
-            this.删除分组ToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
-            this.删除分组ToolStripMenuItem.Text = "删除分组";
-            this.删除分组ToolStripMenuItem.Click += new System.EventHandler(this.删除分组ToolStripMenuItem_Click);
-            // 
             // uiPanel2
             // 
             this.uiPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -553,12 +401,11 @@ namespace jingkeyun.Pinduoduo
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.Controls.Add(this.uiProgressIndicator1);
-            this.panel3.Controls.Add(this.列表);
-            this.panel3.Controls.Add(this.checkBox1);
             this.panel3.Location = new System.Drawing.Point(15, 120);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1028, 714);
             this.panel3.TabIndex = 172;
+            this.panel3.Resize += new System.EventHandler(this.panel3_Resize);
             // 
             // panel1
             // 
@@ -593,86 +440,6 @@ namespace jingkeyun.Pinduoduo
             this.uiLine4.StyleCustomMode = true;
             this.uiLine4.TabIndex = 38;
             // 
-            // check
-            // 
-            this.check.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.NullValue = false;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.check.DefaultCellStyle = dataGridViewCellStyle2;
-            this.check.HeaderText = "";
-            this.check.Name = "check";
-            this.check.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.check.Width = 50;
-            // 
-            // pic
-            // 
-            this.pic.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.NullValue = null;
-            this.pic.DefaultCellStyle = dataGridViewCellStyle3;
-            this.pic.HeaderText = "logo";
-            this.pic.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.pic.Name = "pic";
-            this.pic.ReadOnly = true;
-            this.pic.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.pic.Width = 75;
-            // 
-            // Mall_Name
-            // 
-            this.Mall_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Mall_Name.HeaderText = "店铺名称";
-            this.Mall_Name.Name = "Mall_Name";
-            // 
-            // Mall_Id
-            // 
-            this.Mall_Id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Mall_Id.HeaderText = "店铺id";
-            this.Mall_Id.Name = "Mall_Id";
-            this.Mall_Id.Width = 150;
-            // 
-            // Mall_Type
-            // 
-            this.Mall_Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Mall_Type.HeaderText = "店铺类型";
-            this.Mall_Type.Name = "Mall_Type";
-            this.Mall_Type.ReadOnly = true;
-            // 
-            // state
-            // 
-            this.state.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.state.HeaderText = "店铺授权";
-            this.state.Name = "state";
-            this.state.ReadOnly = true;
-            this.state.Width = 120;
-            // 
-            // Expire
-            // 
-            this.Expire.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Expire.HeaderText = "授权到期时间";
-            this.Expire.Name = "Expire";
-            this.Expire.ReadOnly = true;
-            this.Expire.Width = 180;
-            // 
-            // 操作
-            // 
-            this.操作.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle4.NullValue = "删 除";
-            this.操作.DefaultCellStyle = dataGridViewCellStyle4;
-            this.操作.HeaderText = "操作";
-            this.操作.Name = "操作";
-            this.操作.ReadOnly = true;
-            this.操作.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // model
-            // 
-            this.model.HeaderText = "model";
-            this.model.Name = "model";
-            this.model.Visible = false;
-            this.model.Width = 5;
-            // 
             // mailList
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -686,14 +453,10 @@ namespace jingkeyun.Pinduoduo
             this.Style = Sunny.UI.UIStyle.Custom;
             this.Text = "店铺列表";
             this.Load += new System.EventHandler(this.mailList_Load);
-            this.uiContextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.列表)).EndInit();
-            this.分组菜单.ResumeLayout(false);
             this.uiPanel2.ResumeLayout(false);
             this.uiPanel2.PerformLayout();
             this.uiPanel3.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -701,12 +464,8 @@ namespace jingkeyun.Pinduoduo
         }
 
         #endregion
-        private Sunny.UI.UIContextMenuStrip uiContextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem 删除店铺ToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
         private Sunny.UI.UIProgressIndicator uiProgressIndicator1;
-        private CheckBox checkBox1;
-        private DataGridView 列表;
         private Sunny.UI.UISymbolButton uiSymbolButton3;
         private Sunny.UI.UISymbolButton uiSymbolButton2;
         private Sunny.UI.UISymbolButton uiSymbolButton1;
@@ -719,10 +478,6 @@ namespace jingkeyun.Pinduoduo
         private Sunny.UI.UILine uiLine3;
         private DevComponents.DotNetBar.Controls.TextBoxX textBoxX1;
         private Sunny.UI.UISymbolButton uiSymbolButton8;
-        private ToolStripMenuItem 加入分组ToolStripMenuItem;
-        private Sunny.UI.UIContextMenuStrip 分组菜单;
-        private ToolStripMenuItem 修改分组ToolStripMenuItem;
-        private ToolStripMenuItem 删除分组ToolStripMenuItem;
         private Sunny.UI.UISymbolButton uiSymbolButton6;
         private Sunny.UI.UISymbolButton uiSymbolButton5;
         private Sunny.UI.UIPanel uiPanel2;
@@ -730,14 +485,5 @@ namespace jingkeyun.Pinduoduo
         private Panel panel3;
         private Panel panel1;
         private Sunny.UI.UILine uiLine4;
-        private DataGridViewCheckBoxColumn check;
-        private DataGridViewImageColumn pic;
-        private DataGridViewTextBoxColumn Mall_Name;
-        private DataGridViewTextBoxColumn Mall_Id;
-        private DataGridViewTextBoxColumn Mall_Type;
-        private DataGridViewTextBoxColumn state;
-        private DataGridViewTextBoxColumn Expire;
-        private DataGridViewTextBoxColumn 操作;
-        private DataGridViewTextBoxColumn model;
     }
 }

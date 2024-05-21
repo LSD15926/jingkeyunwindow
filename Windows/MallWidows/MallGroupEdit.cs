@@ -1,24 +1,14 @@
 ﻿using jingkeyun.Class;
+using jingkeyun.Data;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pdd_Models;
+using Pdd_Models.Models;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using jingkeyun.Class;
-using jingkeyun.Data;
-using MoreLinq;
-using Pdd_Models.Models;
-using APIOffice.pddApi;
-using jingkeyun.Data;
 
 namespace jingkeyun.Windows
 {
@@ -37,20 +27,15 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
 
             uiPanel1.StyleCustomMode = true;
             uiPanel1.Style= Sunny.UI.UIStyle.Custom;
             uiPanel1.FillColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
 
         }
         private void ReadData()
@@ -58,7 +43,7 @@ namespace jingkeyun.Windows
             BackData ReadServerData = Mall_Info.get((int)InitUser.User.UserId);
             if (ReadServerData.Code != 0)
             {
-                UIMessageBox.Show("获取店铺失败！");
+                MyMessageBox.Show("获取店铺失败！");
                 return;
             }
             var json=JsonConvert.SerializeObject(ReadServerData.Data);
@@ -132,55 +117,54 @@ namespace jingkeyun.Windows
         {
             if (string.IsNullOrEmpty(txtName.Text))
             {
-                UIMessageBox.Show("请输入分组名称！");
+                MyMessageBox.Show("请输入分组名称！");
                 return;
             }
-            if (UIMessageBox.ShowAsk("是否确认提交？"))
+            
+            BackMsg backMsg = new BackMsg();
+            //新增一条数据
+            if (Type == "Add")
             {
-                BackMsg backMsg = new BackMsg();
-                //新增一条数据
-                if (Type == "Add")
+                MallGroup group = new MallGroup();
+                group.group_user = InitUser.User.UserId;
+                group.group_name = txtName.Text;
+                group.group_notes = txtNotes.Text;
+                backMsg = Mall_Group.Add(group);
+                if (backMsg.Code != 0)
                 {
-                    MallGroup group = new MallGroup();
-                    group.group_user = InitUser.User.UserId;
-                    group.group_name = txtName.Text;
-                    group.group_notes = txtNotes.Text;
-                    backMsg = Mall_Group.Add(group);
+                    MyMessageBox.ShowError("新增分组失败！");
+                    return;
+                }
+                //获取选中数据
+                if (getCheck() > 0)
+                {
+                    //分配店铺分组
+                    string Sql = $"update u_mall set mall_group=(case mall_group when '' then  '{backMsg.Mess}' else mall_group+',{backMsg.Mess}' end)  where id in (" + string.Join(",", mallId) + ")";
+                    backMsg = Quick_Sql.upd(Sql);
                     if (backMsg.Code != 0)
                     {
-                        UIMessageBox.ShowError("新增分组失败！");
+                        MyMessageBox.ShowError("分配分组失败！");
                         return;
                     }
-                    //获取选中数据
-                    if (getCheck() > 0)
+                    else
                     {
-                        //分配店铺分组
-                        string Sql = $"update u_mall set mall_group=(case mall_group when '' then  '{backMsg.Mess}' else mall_group+',{backMsg.Mess}' end)  where id in (" + string.Join(",", mallId) + ")";
-                        backMsg = Quick_Sql.upd(Sql);
-                        if (backMsg.Code != 0)
-                        {
-                            UIMessageBox.ShowError("分配分组失败！");
-                            return;
-                        }
-                        else
-                        {
-                            UIMessageBox.ShowSuccess("新增成功！");
-                            this.DialogResult = DialogResult.OK;
-                            this.Close();
-                            return;
-                        }
+                        MyMessageBox.ShowSuccess("新增成功！");
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                        return;
                     }
-                    UIMessageBox.ShowSuccess("新增成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                    return;
-
                 }
-                else
-                {
+                MyMessageBox.ShowSuccess("新增成功！");
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+                return;
 
-                }
             }
+            else
+            {
+
+            }
+            
         }
 
         List<string> mallId = new List<string>();

@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using jingkeyun.Data;
 using jingkeyun.Controls;
 using APIOffice.pddApi;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
@@ -31,7 +32,7 @@ namespace jingkeyun.Windows
             set
             {
                 _GoodsModel = value;
-                uiLabel2.Text=value.Count.ToString();
+                uiLabel2.Text = value.Count.ToString();
                 InitTemp();
             }
         }
@@ -44,17 +45,12 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
         }
 
         private void InitTemp()
@@ -78,59 +74,57 @@ namespace jingkeyun.Windows
         {
             if (ddlTemp.SelectedIndex >= 0)
             {
-                GoodsTemplate template= ddlTemp.SelectedItem as GoodsTemplate;
-                uiLabel3.Text="计费方式："+(template.cost_type==0?"按件计费":"按重量计费");
+                GoodsTemplate template = ddlTemp.SelectedItem as GoodsTemplate;
+                uiLabel3.Text = "计费方式：" + (template.cost_type == 0 ? "按件计费" : "按重量计费");
             }
         }
 
-        bool flag=true;
         private void btnOK_Click(object sender, EventArgs e)
         {
-            flag=false;
             if (ddlTemp.SelectedIndex == -1)
             {
-                UIMessageBox.Show("请选择运费模板后提交!");
+                MyMessageBox.Show("请选择运费模板后提交!");
                 return;
             }
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
+            //获取提交请求列表
+            List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
+            GoodsTemplate template = ddlTemp.SelectedItem as GoodsTemplate;
+            foreach (var item in GoodsModel)
             {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
-                GoodsTemplate template = ddlTemp.SelectedItem as GoodsTemplate;
-                foreach (var item in GoodsModel)
-                {
-                    
-                    RequstGoodEditModel model = new RequstGoodEditModel();
-                    model.ApiType = (int)GoodsEdit.运费模板;
-                    model.goods_id = item.goods_id;
-                    model.cost_template_id= template.template_id;
-                    model.Malls=item.Mallinfo;
-                    models.Add(model);
-                }
-                BackMsg backMsg = Good_Edit.Edit(models);
-                if (backMsg.Code == 0)
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    flag=true;
-                }
-                else
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
-                    return;
-                }
+
+                RequstGoodEditModel model = new RequstGoodEditModel();
+                model.ApiType = (int)GoodsEdit.运费模板;
+                model.goods_id = item.goods_id;
+                model.cost_template_id = template.template_id;
+                model.Malls = item.Mallinfo;
+                models.Add(model);
             }
+
+            InitUser.RunningTask.Add("运费模板" + stampNow, stampNow.ToString());
+            UIMessageTip.ShowOk("已提交至后台处理");
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.RunWorkerAsync(models);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("运费模板" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改运费模板");
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<RequstGoodEditModel> models = e.Argument as List<RequstGoodEditModel>;
+            RetMsg = Good_Edit.Edit(models);
         }
 
         private void ChangeTemplate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!flag)
-            {
-                e.Cancel = true;
-                flag = true;
-            }
         }
 
         private void uiButton2_Click(object sender, EventArgs e)

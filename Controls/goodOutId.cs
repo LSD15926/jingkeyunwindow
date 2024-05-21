@@ -29,43 +29,46 @@ namespace jingkeyun.Controls
             set
             {
                 uiLabel1.Text = value;
-                uiLabel3.Visible = true;
                 textBoxX1.Visible = true;
             }
         }
-
-        public long Good_id { get; set; }
-
-        public string SkuName
+        private bool _BgColor = false;
+        public bool BgColor
         {
-            get { return uiLabel2.Text; }
-            set { uiLabel2.Text = value; }
+            get { return _BgColor; }
+            set
+            {
+                _BgColor = value;
+                if (value)
+                {
+                    this.BackColor = Color.FromArgb(220, 210, 231);
+                }
+            }
         }
 
-        public string outGood
-        {
-            get { return textBoxX1.Text; }
-            set { textBoxX1.Text = value; }
-        }
-
-        public string outSku
-        {
-            get { return textBoxX2.Text; }
-            set { textBoxX2.Text = value;}
-        }
         public goodOutId()
         {
             InitializeComponent();
         }
 
-        private skuList _sku;
-        public skuList Sku
-        { get { return _sku; } set { _sku = value; } }
-
-        public Sku_listItem sku_List;
-
-        private Mallinfo _mallinfo;
-        public Mallinfo mallinfo
-        {  get { return _mallinfo; } set { _mallinfo = value; } }
+        private Goods_detailModel _Good;
+        public Goods_detailModel Good
+        {
+            get
+            {
+                _Good.outer_goods_id = textBoxX1.Text;
+                foreach (var item in _Good.sku_list)
+                {
+                    item.out_sku_sn = textBoxX2.Text;
+                }
+                return _Good;
+            }
+            set
+            {
+                _Good = value;
+                textBoxX2.Text = _Good.sku_list[0].out_sku_sn;
+                textBoxX1.Text = _Good.outer_goods_id;
+            }
+        }
     }
 }

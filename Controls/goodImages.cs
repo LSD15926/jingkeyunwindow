@@ -1,22 +1,14 @@
 ﻿using jingkeyun.Class;
+using jingkeyun.Data;
 using jingkeyun.Windows;
 using Pdd_Models;
 using Pdd_Models.Models;
-using Sunny.UI;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Security.Policy;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using jingkeyun.Class;
-using jingkeyun.Data;
 
 namespace jingkeyun.Controls
 {
@@ -39,7 +31,19 @@ namespace jingkeyun.Controls
                 uiLabel1.Text = value;
             }
         }
-
+        private bool _BgColor = false;
+        public bool BgColor
+        {
+            get { return _BgColor; }
+            set
+            {
+                _BgColor = value;
+                if (value)
+                {
+                    this.BackColor = Color.FromArgb(220, 210, 231);
+                }
+            }
+        }
         public long Good_id { get; set; }
         public goodImages()
         {
@@ -95,13 +99,13 @@ namespace jingkeyun.Controls
                         }
                         else
                         {
-                            UIMessageBox.ShowError( "第"+(i+1)+"张图片上传失败！" + backMsg.Mess);
+                            MyMessageBox.ShowError( "第"+(i+1)+"张图片上传失败！" + backMsg.Mess);
                             return;
                         }
                     }
                     catch (Exception ex)
                     {
-                        UIMessageBox.ShowError("第" + (i + 1) + "张图片上传失败！" + ex.Message);
+                        MyMessageBox.ShowError("第" + (i + 1) + "张图片上传失败！" + ex.Message);
                         return;
                     }
                 });
@@ -150,7 +154,7 @@ namespace jingkeyun.Controls
         
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否清空已上传的图片？"))
+            if (MyMessageBox.ShowAsk("是否清空已上传的图片？"))
             {
                 uiFlowLayoutPanel1.Controls[2].Controls.Clear();
                 getPath();
@@ -196,7 +200,7 @@ namespace jingkeyun.Controls
             }
             if (images.Count == 0)
             {
-                UIMessageBox.Show("请先上传图片！");
+                MyMessageBox.Show("请先上传图片！");
                 return;
             }
             SortPic sort = new SortPic();

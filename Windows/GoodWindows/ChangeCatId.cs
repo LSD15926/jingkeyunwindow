@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
@@ -32,7 +33,7 @@ namespace jingkeyun.Windows
             {
                 _GoodsModel = value;
                 GetCats(uiTreeView1);
-                uiLabel2.Text=value.Count.ToString();
+                uiLabel2.Text = value.Count.ToString();
             }
         }
 
@@ -45,61 +46,58 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel1.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
 
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            GoodsCat cat=uiLabel5.Tag as GoodsCat;
+            GoodsCat cat = uiLabel5.Tag as GoodsCat;
             if (!cat.leaf)
             {
-                UIMessageBox.Show("请选择完整的分类！");
+                MyMessageBox.Show("请选择完整的分类！");
                 return;
             }
 
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
-            {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
+            //获取提交请求列表
+            List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
 
-                foreach (var item in GoodsModel)
-                {
-                    RequstGoodEditModel model = new RequstGoodEditModel();
-                    model.ApiType = (int)GoodsEdit.叶子类目;
-                    model.goods_id = item.goods_id;
-                    model.cat_id = cat.cat_id;
-                    model.Malls=item.Mallinfo;
-                    models.Add(model);
-                }
-                BackMsg backMsg = Good_Edit.Edit(models);
-                if (backMsg.Code == 0)
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-                else
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
-                    return;
-                }
+            foreach (var item in GoodsModel)
+            {
+                RequstGoodEditModel model = new RequstGoodEditModel();
+                model.ApiType = (int)GoodsEdit.叶子类目;
+                model.goods_id = item.goods_id;
+                model.cat_id = cat.cat_id;
+                model.Malls = item.Mallinfo;
+                models.Add(model);
             }
+            InitUser.RunningTask.Add("商品分类" + stampNow,stampNow.ToString());
+            UIMessageTip.ShowOk("已提交至后台处理");
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.RunWorkerAsync(models);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("商品分类" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改商品分类");
         }
 
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<RequstGoodEditModel> models = e.Argument as List<RequstGoodEditModel>;
+            RetMsg = Good_Edit.Edit(models);
+        }
         private void GetCats(UITreeView control, long cat_id = 0)
         {
             RequstCat requstCat = new RequstCat(cat_id, GoodsModel[0].Mallinfo);
@@ -114,15 +112,15 @@ namespace jingkeyun.Windows
                     foreach (var cat in goodsCats)
                     {
                         TreeNode treeNode = new TreeNode();
-                        treeNode.Text=cat.cat_name;
-                        treeNode.Tag=cat;
+                        treeNode.Text = cat.cat_name;
+                        treeNode.Tag = cat;
                         control.Nodes.Add(treeNode);
                     }
                 }
             }
             else
             {
-                UIMessageBox.ShowError("获取失败！"+backMsg.Mess);
+                MyMessageBox.ShowError("获取失败！" + backMsg.Mess);
                 return;
             }
         }
@@ -134,7 +132,7 @@ namespace jingkeyun.Windows
             uiTreeView4.Nodes.Clear();
             if (!a.leaf)
                 GetCats(uiTreeView2, a.cat_id);
-            uiLabel5.Text= a.cat_name;
+            uiLabel5.Text = a.cat_name;
             uiLabel5.Tag = a;
         }
 
@@ -145,7 +143,7 @@ namespace jingkeyun.Windows
             uiTreeView4.Nodes.Clear();
             if (!a.leaf)
                 GetCats(uiTreeView3, a.cat_id);
-            uiLabel5.Text = (uiTreeView1.SelectedNode.Tag as GoodsCat).cat_name+">"+ a.cat_name;
+            uiLabel5.Text = (uiTreeView1.SelectedNode.Tag as GoodsCat).cat_name + ">" + a.cat_name;
             uiLabel5.Tag = a;
         }
 

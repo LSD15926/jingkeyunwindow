@@ -34,6 +34,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MallGroupEdit));
             this.uiPanel1 = new Sunny.UI.UIPanel();
             this.uiButton2 = new Sunny.UI.UIButton();
             this.uiButton1 = new Sunny.UI.UIButton();
@@ -287,6 +288,7 @@
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.uiPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MallGroupEdit";

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
@@ -43,43 +44,42 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title ;
 
             panel1.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
         }
-        LoadingForm loading;
-        bool succ=false;
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
+            List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
+            foreach (var item in GoodsModel)
             {
-                loading = new LoadingForm(this);
-                loading.Location = this.Location;
-                loading.Show();
-                BackgroundWorker worker = new BackgroundWorker(); 
-                worker.DoWork += Worker_DoWork;
-                worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-                worker.RunWorkerAsync();
+                RequstGoodEditModel model = new RequstGoodEditModel();
+                model.ApiType = (int)GoodsEdit.坏果包赔;
+                model.goods_id = item.goods_id;
+                model.bad_fruit_claim = uiRadioButton1.Checked ? 1 : 0;
+                model.Malls = item.Mallinfo;
+                models.Add(model);
             }
+            stampNow=MyConvert.ToTimeStamp(DateTime.Now);
+            InitUser.RunningTask.Add("坏了包赔"+stampNow, stampNow.ToString());
+            UIMessageTip.ShowOk("已提交至后台处理");
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.RunWorkerAsync(models);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
+        BackMsg RetMsg;
 
+        private long stampNow;
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            loading.Close();
-            if (succ)
-            {
-                succ= false;
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-            }
+            InitUser.RunningTask.Remove("坏了包赔" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改坏了包赔");
         }
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -94,17 +94,7 @@ namespace jingkeyun.Windows
                 model.Malls = item.Mallinfo;
                 models.Add(model);
             }
-            BackMsg backMsg = Good_Edit.Edit(models);
-            if (backMsg.Code == 0)
-            {
-                UIMessageBox.ShowSuccess("修改成功！");
-                succ=true;
-            }
-            else
-            {
-                UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
-                return;
-            }
+            RetMsg = Good_Edit.Edit(models);
         }
 
         private void ChangeShipmentTime_FormClosing(object sender, FormClosingEventArgs e)

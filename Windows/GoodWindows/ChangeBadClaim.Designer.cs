@@ -37,6 +37,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.uiButton2 = new Sunny.UI.UIButton();
             this.uiButton1 = new Sunny.UI.UIButton();
+            this.uiLabel3 = new Sunny.UI.UILabel();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,7 +45,7 @@
             // 
             this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel1.Location = new System.Drawing.Point(57, 56);
+            this.uiLabel1.Location = new System.Drawing.Point(57, 68);
             this.uiLabel1.Name = "uiLabel1";
             this.uiLabel1.Size = new System.Drawing.Size(100, 23);
             this.uiLabel1.TabIndex = 12;
@@ -55,7 +56,7 @@
             // 
             this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel2.Location = new System.Drawing.Point(163, 56);
+            this.uiLabel2.Location = new System.Drawing.Point(163, 68);
             this.uiLabel2.Name = "uiLabel2";
             this.uiLabel2.Size = new System.Drawing.Size(100, 23);
             this.uiLabel2.TabIndex = 13;
@@ -66,7 +67,7 @@
             // 
             this.uiRadioButton2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.uiRadioButton2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiRadioButton2.Location = new System.Drawing.Point(263, 100);
+            this.uiRadioButton2.Location = new System.Drawing.Point(263, 112);
             this.uiRadioButton2.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiRadioButton2.Name = "uiRadioButton2";
             this.uiRadioButton2.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -80,7 +81,7 @@
             this.uiRadioButton1.Checked = true;
             this.uiRadioButton1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.uiRadioButton1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiRadioButton1.Location = new System.Drawing.Point(166, 100);
+            this.uiRadioButton1.Location = new System.Drawing.Point(166, 112);
             this.uiRadioButton1.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiRadioButton1.Name = "uiRadioButton1";
             this.uiRadioButton1.Padding = new System.Windows.Forms.Padding(22, 0, 0, 0);
@@ -93,7 +94,7 @@
             // 
             this.uiLabel4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel4.Location = new System.Drawing.Point(57, 103);
+            this.uiLabel4.Location = new System.Drawing.Point(57, 115);
             this.uiLabel4.Name = "uiLabel4";
             this.uiLabel4.Size = new System.Drawing.Size(106, 23);
             this.uiLabel4.TabIndex = 18;
@@ -138,10 +139,24 @@
             this.uiButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiButton1.Click += new System.EventHandler(this.btnOK_Click);
             // 
+            // uiLabel3
+            // 
+            this.uiLabel3.AutoSize = true;
+            this.uiLabel3.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel3.ForeColor = System.Drawing.Color.Red;
+            this.uiLabel3.Location = new System.Drawing.Point(63, 40);
+            this.uiLabel3.Name = "uiLabel3";
+            this.uiLabel3.Size = new System.Drawing.Size(135, 20);
+            this.uiLabel3.Style = Sunny.UI.UIStyle.Custom;
+            this.uiLabel3.TabIndex = 27;
+            this.uiLabel3.Text = "部分商品不支持修改";
+            this.uiLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // ChangeBadClaim
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(553, 204);
+            this.Controls.Add(this.uiLabel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.uiRadioButton2);
             this.Controls.Add(this.uiRadioButton1);
@@ -149,13 +164,18 @@
             this.Controls.Add(this.uiLabel2);
             this.Controls.Add(this.uiLabel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ChangeBadClaim";
+            this.ShowRect = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Style = Sunny.UI.UIStyle.Custom;
             this.Text = "批量修改坏了包赔";
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChangeShipmentTime_FormClosing);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -168,5 +188,6 @@
         private System.Windows.Forms.Panel panel1;
         private Sunny.UI.UIButton uiButton2;
         private Sunny.UI.UIButton uiButton1;
+        private Sunny.UI.UILabel uiLabel3;
     }
 }

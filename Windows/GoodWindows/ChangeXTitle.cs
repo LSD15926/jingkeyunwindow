@@ -13,13 +13,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
     public partial class ChangeXTitle : UIForm
     {
 
-        private List<Image> _images=new List<Image>();
+        private List<Image> _images = new List<Image>();
 
         public List<Image> Images
         {
@@ -29,7 +30,7 @@ namespace jingkeyun.Windows
 
         public List<Goods_detailModel> goods_DetailModels { get; set; }
 
-        private List<GoodListResponse> _GoodsModel=new List<GoodListResponse>();
+        private List<GoodListResponse> _GoodsModel = new List<GoodListResponse>();
 
         public List<GoodListResponse> GoodsModel
         {
@@ -44,13 +45,14 @@ namespace jingkeyun.Windows
                 int cnt = 0;
                 foreach (var item in _GoodsModel)
                 {
-                    goodTitle User=new goodTitle();
+                    goodTitle User = new goodTitle();
                     User.Image = Images[cnt];
-                    User.Title=item.goods_name+"\r\nID:"+item.goods_id;
+                    User.Title = item.goods_name + "\r\nID:" + item.goods_id;
                     //todo 接口获取短标题
-                    User.NewTitle=goods_DetailModels.FirstOrDefault(x => x.goods_id == item.goods_id).tiny_name;
-                    User.Good_id=item.goods_id;
-                    User.mallinfo=item.Mallinfo;
+                    User.NewTitle = goods_DetailModels.FirstOrDefault(x => x.goods_id == item.goods_id).tiny_name;
+                    User.Good_id = item.goods_id;
+                    User.mallinfo = item.Mallinfo;
+                    User.BgColor = cnt % 2 == 1;
                     uiFlowLayoutPanel1.Controls.Add(User);
                     cnt++;
                 }
@@ -65,29 +67,15 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
-
-            uiButton3.StyleCustomMode = true;
-            uiButton3.Style = UIStyle.Custom;
-            uiButton3.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton4.StyleCustomMode = true;
-            uiButton4.Style = UIStyle.Custom;
-            uiButton4.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton5.StyleCustomMode = true;
-            uiButton5.Style = UIStyle.Custom;
-            uiButton5.FillColor = Color.FromArgb(119, 40, 245);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
+            StyleHelper.SetButtonColor(uiButton3, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton4, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton5, StyleHelper.OkButton);
         }
 
         private void uiButton3_Click(object sender, EventArgs e)
@@ -96,14 +84,14 @@ namespace jingkeyun.Windows
             {
                 return;
             }
-            foreach(var item in uiFlowLayoutPanel1.Panel.Controls)
+            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
             {
                 if (item.GetType().Name != "goodTitle")
                 {
                     continue;
                 }
-                (item as goodTitle).NewTitle= (item as goodTitle).NewTitle.Replace(txtOld.Text, txtNew.Text);
-                
+                (item as goodTitle).NewTitle = (item as goodTitle).NewTitle.Replace(txtOld.Text, txtNew.Text);
+
             }
             txtOld.Text = "";
             txtOld.Text = "";
@@ -122,7 +110,7 @@ namespace jingkeyun.Windows
                 {
                     continue;
                 }
-                (item as goodTitle).NewTitle = txtBegin.Text+(item as goodTitle).NewTitle;
+                (item as goodTitle).NewTitle = txtBegin.Text + (item as goodTitle).NewTitle;
             }
             txtBegin.Text = "";
 
@@ -140,7 +128,7 @@ namespace jingkeyun.Windows
                 {
                     continue;
                 }
-                (item as goodTitle).NewTitle =  (item as goodTitle).NewTitle+ txtEnd.Text;
+                (item as goodTitle).NewTitle = (item as goodTitle).NewTitle + txtEnd.Text;
             }
             txtEnd.Text = "";
         }
@@ -152,53 +140,56 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
+            //获取提交请求列表
+            List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
+            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
             {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
-                foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
+                if (item.GetType().Name != "goodTitle")
                 {
-                    if (item.GetType().Name != "goodTitle")
-                    {
-                        continue;
-                    }
-                    goodTitle User= (item as goodTitle);
-                    RequstGoodEditModel model = new RequstGoodEditModel();
-                    model.ApiType = (int)GoodsEdit.短标题;
-                    model.goods_id=User.Good_id;
-                    model.tiny_name=User.NewTitle;
-                    model.Malls=User.mallinfo;
-                    if (string.IsNullOrEmpty(User.NewTitle))
-                    {
-                        new UIPage().HideProcessForm();
-                        UIMessageBox.Show("标题不能为空！");
-                        return;
-                    }
-                    Encoding gb2312Encoding = Encoding.GetEncoding("GB2312");
-                    if (gb2312Encoding.GetByteCount(User.NewTitle) > 20)
-                    {
-                        new UIPage().HideProcessForm();
-                        UIMessageBox.Show("短标题不能超过20字符！");
-                        return;
-                    }
-                    models.Add(model);
+                    continue;
                 }
-                BackMsg backMsg = Good_Edit.Edit(models);
-                if (backMsg.Code == 0)
+                goodTitle User = (item as goodTitle);
+                RequstGoodEditModel model = new RequstGoodEditModel();
+                model.ApiType = (int)GoodsEdit.短标题;
+                model.goods_id = User.Good_id;
+                model.tiny_name = User.NewTitle;
+                model.Malls = User.mallinfo;
+                if (string.IsNullOrEmpty(User.NewTitle))
                 {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-                else
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！"+backMsg.Mess);
+                    MyMessageBox.Show("标题不能为空！");
                     return;
                 }
+                Encoding gb2312Encoding = Encoding.GetEncoding("GB2312");
+                if (gb2312Encoding.GetByteCount(User.NewTitle) > 20)
+                {
+                    MyMessageBox.Show("短标题不能超过20字符！");
+                    return;
+                }
+                models.Add(model);
+                goods_DetailModels.Find(x => x.goods_id == User.Good_id).tiny_name = model.tiny_name;
             }
+
+            InitUser.RunningTask.Add("短标题" + stampNow, stampNow.ToString());
+            UIMessageTip.ShowOk("已提交至后台处理");
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.RunWorkerAsync(models);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("短标题" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改短标题");
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<RequstGoodEditModel> models = e.Argument as List<RequstGoodEditModel>;
+            RetMsg = Good_Edit.Edit(models);
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
@@ -50,6 +51,7 @@ namespace jingkeyun.Windows
                     User.Good_id = item.goods_id;
                     User.mallinfo = item.Mallinfo;
                     User.imageType = 1;
+                    User.BgColor = cnt % 2 == 1;
                     uiFlowLayoutPanel1.Controls.Add(User);
                     cnt++;
                 }
@@ -64,17 +66,12 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
         }
         private void uiButton2_Click(object sender, EventArgs e)
         {
@@ -83,66 +80,62 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
+            MyMessageBox.ShowLoading();
+            //获取提交请求列表
+            List<FileSpaceUpload> models = new List<FileSpaceUpload>();
+            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
             {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<FileSpaceUpload> models = new List<FileSpaceUpload>();
-                foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
+                if (item.GetType().Name != "goodFileSpaceImage")
                 {
-                    if (item.GetType().Name != "goodFileSpaceImage")
-                    {
-                        continue;
-                    }
-                    goodFileSpaceImage User = (item as goodFileSpaceImage);
-                    if (User.spaceResponse == null)
-                    {
-                        continue;
-                    }
-                    FileSpaceUpload model = new FileSpaceUpload();
-                    model.content = User.spaceResponse.url;
-                    model.file_id = User.spaceResponse.file_id;
-                    model.goods_id = User.Good_id;
-                    model.material_type = 1;
-                    model.access_token = User.mallinfo.mall_token;
-                    models.Add(model);
+                    continue;
                 }
+                goodFileSpaceImage User = (item as goodFileSpaceImage);
+                if (User.spaceResponse == null)
+                {
+                    continue;
+                }
+                FileSpaceUpload model = new FileSpaceUpload();
+                model.content = User.spaceResponse.url;
+                model.file_id = User.spaceResponse.file_id;
+                model.goods_id = User.Good_id;
+                model.material_type = 1;
+                model.access_token = User.mallinfo.mall_token;
+                models.Add(model);
+            }
 
-                bool flag=true;
-                string ErrorMsg = "";
-                if (Parallel.For(0, models.Count, i =>
+            bool flag = true;
+            string ErrorMsg = "";
+            if (Parallel.For(0, models.Count, i =>
+            {
+                try
                 {
-                    try
+                    BackMsg backMsg = PIcture_Upload.create(models[i]);
+                    if (backMsg.Code == 0)
                     {
-                        BackMsg backMsg = PIcture_Upload.create(models[i]);
-                        if (backMsg.Code == 0)
-                        {
-                        }
-                        else
-                        {
-                            ErrorMsg= backMsg.Mess;
-                            flag=false;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorMsg =ex.Message;
-                        flag = false;
-                    }
-                }).IsCompleted)
-                {
-                    if (flag)
-                    {
-                        new UIPage().HideProcessForm();
-                        UIMessageBox.ShowSuccess("提交成功！");
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
                     }
                     else
                     {
-                        new UIPage().HideProcessForm();
-                        UIMessageBox.ShowError("提交失败！"+ ErrorMsg);
+                        ErrorMsg = backMsg.Mess;
+                        flag = false;
                     }
+                }
+                catch (Exception ex)
+                {
+                    ErrorMsg = ex.Message;
+                    flag = false;
+                }
+            }).IsCompleted)
+            {
+                MyMessageBox.IsShowLoading = false;
+                if (flag)
+                {
+                    MyMessageBox.ShowSuccess("提交成功！");
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+                else
+                {
+                    MyMessageBox.ShowError("提交失败！" + ErrorMsg);
                 }
             }
         }

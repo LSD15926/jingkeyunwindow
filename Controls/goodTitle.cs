@@ -30,7 +30,19 @@ namespace jingkeyun.Controls
                 uiLabel1.Text = value;
             }
         }
-
+        private bool _BgColor = false;
+        public bool BgColor
+        {
+            get { return _BgColor; }
+            set
+            {
+                _BgColor = value;
+                if (value)
+                {
+                    this.BackColor = Color.FromArgb(220, 210, 231);
+                }
+            }
+        }
         public long Good_id { get; set; }
         public string NewTitle 
         { 

@@ -13,13 +13,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
     public partial class ChangeDetailImage : UIForm
     {
 
-        private List<Image> _images=new List<Image>();
+        private List<Image> _images = new List<Image>();
 
         public List<Image> Images
         {
@@ -28,7 +29,7 @@ namespace jingkeyun.Windows
         }
         public List<Goods_detailModel> goods_DetailModels { get; set; }
 
-        private List<GoodListResponse> _GoodsModel=new List<GoodListResponse>();
+        private List<GoodListResponse> _GoodsModel = new List<GoodListResponse>();
 
         public List<GoodListResponse> GoodsModel
         {
@@ -43,11 +44,12 @@ namespace jingkeyun.Windows
                 int cnt = 0;
                 foreach (var item in _GoodsModel)
                 {
-                    goodImages User=new goodImages();
+                    goodImages User = new goodImages();
                     User.Image = Images[cnt];
                     User.Title = item.goods_name + "\r\nID:" + item.goods_id;
-                    User.Good_id=item.goods_id;
-                    User.mallinfo=item.Mallinfo;
+                    User.Good_id = item.goods_id;
+                    User.mallinfo = item.Mallinfo;
+                    User.BgColor = cnt % 2 == 1;
                     uiFlowLayoutPanel1.Controls.Add(User);
                     cnt++;
                 }
@@ -62,17 +64,12 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
 
         }
 
@@ -83,46 +80,50 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
-            {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
-                foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-                {
-                    
-                    if (item.GetType().Name != "goodImages")
-                    {
-                        continue;
-                    }
-                    goodImages User = (item as goodImages);
-                    if (User.ImagePath.Count == 0)
-                    { 
-                        continue ;
-                    }
-                    RequstGoodEditModel model = new RequstGoodEditModel();
-                    model.ApiType = (int)GoodsEdit.详情图;
-                    model.goods_id = User.Good_id;
-                    model.Malls = User.mallinfo;
-                    model.detail_gallery =User.ImagePath;
 
-                    models.Add(model);
-                }
-                BackMsg backMsg = Good_Edit.Edit(models);
-                if (backMsg.Code == 0)
+            //获取提交请求列表
+            List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
+            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
+            {
+
+                if (item.GetType().Name != "goodImages")
                 {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    continue;
                 }
-                else
+                goodImages User = (item as goodImages);
+                if (User.ImagePath.Count == 0)
                 {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
-                    return;
+                    continue;
                 }
+                RequstGoodEditModel model = new RequstGoodEditModel();
+                model.ApiType = (int)GoodsEdit.详情图;
+                model.goods_id = User.Good_id;
+                model.Malls = User.mallinfo;
+                model.detail_gallery = User.ImagePath;
+                
+                models.Add(model);
             }
+            InitUser.RunningTask.Add("详情图" + stampNow, stampNow.ToString());
+            UIMessageTip.ShowOk("已提交至后台处理");
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.RunWorkerAsync(models);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("详情图" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改详情图");
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<RequstGoodEditModel> models = e.Argument as List<RequstGoodEditModel>;
+            RetMsg = Good_Edit.Edit(models);
         }
     }
 }

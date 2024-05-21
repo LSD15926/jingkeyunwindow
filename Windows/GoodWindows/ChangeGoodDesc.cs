@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
@@ -49,6 +50,7 @@ namespace jingkeyun.Windows
                     User.NewTitle= goods_DetailModels.FirstOrDefault(x => x.goods_id == item.goods_id).goods_desc;
                     User.Good_id=item.goods_id;
                     User.mallinfo=item.Mallinfo;
+                    User.BgColor = cnt % 2 == 1;
                     uiFlowLayoutPanel1.Controls.Add(User);
                     cnt++;
                 }
@@ -63,29 +65,17 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
             uiButton1.FillColor = Color.FromArgb(119, 40, 245);
 
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
-
-            uiButton3.StyleCustomMode = true;
-            uiButton3.Style = UIStyle.Custom;
-            uiButton3.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton4.StyleCustomMode = true;
-            uiButton4.Style = UIStyle.Custom;
-            uiButton4.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton5.StyleCustomMode = true;
-            uiButton5.Style = UIStyle.Custom;
-            uiButton5.FillColor = Color.FromArgb(119, 40, 245);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
+            StyleHelper.SetButtonColor(uiButton3, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton4, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton5, StyleHelper.OkButton);
 
         }
 
@@ -151,54 +141,57 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
+           
+            //获取提交请求列表
+            List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
+            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
             {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
-                foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
+                if (item.GetType().Name != "goodTitle")
                 {
-                    if (item.GetType().Name != "goodTitle")
-                    {
-                        continue;
-                    }
-                    goodTitle User= (item as goodTitle);
-                    RequstGoodEditModel model = new RequstGoodEditModel();
-                    model.ApiType = (int)GoodsEdit.商品描述;
-                    model.goods_id=User.Good_id;
-                    model.goods_desc=User.NewTitle;
-                    model.Malls=User.mallinfo;
-                    if (string.IsNullOrEmpty(User.NewTitle))
-                    {
-                        new UIPage().HideProcessForm();
-                        UIMessageBox.Show("商品描述不能为空！");
-                        return;
-                    }
-                    Encoding gb2312Encoding = Encoding.GetEncoding("GB2312");
-                    if (gb2312Encoding.GetByteCount(User.NewTitle) > 500|| gb2312Encoding.GetByteCount(User.NewTitle)<20)
-                    {
-                        new UIPage().HideProcessForm();
-                        UIMessageBox.Show("商品描述字数限制：20-500！");
-                        return;
-                    }
-                    models.Add(model);
-                    goods_DetailModels.Find(x=>x.goods_id==User.Good_id).goods_desc= model.goods_desc;
+                    continue;
                 }
-                BackMsg backMsg = Good_Edit.Edit(models);
-                if (backMsg.Code == 0)
+                goodTitle User= (item as goodTitle);
+                RequstGoodEditModel model = new RequstGoodEditModel();
+                model.ApiType = (int)GoodsEdit.商品描述;
+                model.goods_id=User.Good_id;
+                model.goods_desc=User.NewTitle;
+                model.Malls=User.mallinfo;
+                if (string.IsNullOrEmpty(User.NewTitle))
                 {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-                else
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！"+backMsg.Mess);
+                    MyMessageBox.ShowError("商品描述不能为空！");
                     return;
                 }
+                Encoding gb2312Encoding = Encoding.GetEncoding("GB2312");
+                if (gb2312Encoding.GetByteCount(User.NewTitle) > 500|| gb2312Encoding.GetByteCount(User.NewTitle)<20)
+                {
+                    MyMessageBox.ShowError("商品描述字数限制：20-500！");
+                    return;
+                }
+                models.Add(model);
+                goods_DetailModels.Find(x=>x.goods_id==User.Good_id).goods_desc= model.goods_desc;
             }
+            InitUser.RunningTask.Add("商品描述" + stampNow, stampNow.ToString());
+            UIMessageTip.ShowOk("已提交至后台处理");
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.RunWorkerAsync(models);
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("商品描述" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改商品描述");
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<RequstGoodEditModel> models = e.Argument as List<RequstGoodEditModel>;
+            RetMsg = Good_Edit.Edit(models);
+        }
+
     }
 }

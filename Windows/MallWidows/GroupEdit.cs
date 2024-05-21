@@ -64,7 +64,7 @@ namespace jingkeyun.Windows
         {
             if (string.IsNullOrEmpty(txtName.Text))
             {
-                UIMessageBox.ShowError("请输入分组名称！");
+                MyMessageBox.ShowError("请输入分组名称！");
                 return;
             }
             _mallGroups.group_name= txtName.Text;
@@ -73,16 +73,15 @@ namespace jingkeyun.Windows
             if (backMsg.Code == 0)
             {
 
-                UIMessageBox.ShowSuccess("修改成功！");
+                MyMessageBox.ShowSuccess("修改成功！");
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else
             {
-                UIMessageBox.ShowError("修改失败!" + backMsg.Mess);
+                MyMessageBox.ShowError("修改失败!" + backMsg.Mess);
                 return;
             }
-
         }
     }
 }

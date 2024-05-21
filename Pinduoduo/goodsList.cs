@@ -1,28 +1,28 @@
-﻿using DevComponents.DotNetBar;
+﻿using CefSharp;
+using CefSharp.WinForms;
 using jingkeyun.Class;
 using jingkeyun.Data;
+using jingkeyun.Windows;
 using MoreLinq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pdd_Models;
 using Pdd_Models.Models;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Policy;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using jingkeyun.Class;
-using jingkeyun.Data;
-using jingkeyun.Windows;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
+using EditInfo = jingkeyun.Windows.EditInfo;
 
 namespace jingkeyun.Pinduoduo
 {
@@ -36,6 +36,8 @@ namespace jingkeyun.Pinduoduo
         public goodsList()
         {
             InitializeComponent();
+            uiPagination1.StyleCustomMode = true;
+            uiPagination1.Style = UIStyle.Purple;
         }
         private void goodsList_Load(object sender, EventArgs e)
         {
@@ -59,9 +61,31 @@ namespace jingkeyun.Pinduoduo
             //默认选中所有已授权的
             InitUser.Choose_mall = InitUser.All_mall;
             txtMalls.Text = InitUser.Choose_mall.Count + "个店铺";
-            uiPagination1.PageSize = 20;
             //ReadData();
+            ddlquantity.SelectedIndex = 0;
+
+            //初始化列表页
+            InitBrowser();
+
+
         }
+        ChromiumWebBrowser Chrome;
+        JsObject_Good jsObject = new JsObject_Good();
+        public void InitBrowser()
+        {
+            Chrome = new ChromiumWebBrowser(InitUser.pageUrl + "jingkeyun/goodTable.html");
+            Chrome.MenuHandler = new MenuHandler();
+            Chrome.KeyboardHandler = new CEFKeyBoardHander();
+            Chrome.BrowserSettings = new BrowserSettings() { WebGl = CefState.Enabled, ImageLoading = CefState.Enabled, RemoteFonts = CefState.Enabled };
+            Chrome.Dock = DockStyle.Fill;
+            CefSharpSettings.WcfEnabled = true;
+            Chrome.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
+
+            jsObject.form = this;
+            Chrome.JavascriptObjectRepository.Register("boundAsync", jsObject, true, BindingOptions.DefaultBinder);
+            this.panelPage.Controls.Add(Chrome);
+        }
+
         private void Error_UpdLog(string message)
         {
             return;
@@ -73,25 +97,39 @@ namespace jingkeyun.Pinduoduo
             cnt = 0;
             if (InitUser.Choose_mall.Count == 0)
             {
-               UIMessageTip.ShowError("请先选择店铺！");
+                UIMessageTip.ShowError("请先选择店铺！");
                 return;
             }
-            uiProgressIndicator1.Visible = true;
+
+            if (uiProgressIndicator1.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    uiProgressIndicator1.Visible = true;
+                }));
+            }
+            else
+            {
+                uiProgressIndicator1.Visible = true;
+
+            }
             isFirst = true;
             timer1.Start();
             ReadServerDataState = true;
         }
-        private async void ListData()
+        private async void ListData(bool IsOnale)
         {
             //var ws = Stopwatch.StartNew();
-
+            isComplete = false;
             AllGood.Clear();
             List<requestGoodList> requestGoods = new List<requestGoodList>(); //所有请求体集合
             for (int i = 0; i < InitUser.Choose_mall.Count; i++)
             {
-                requestGoodList requestGoodList = new requestGoodList();
-                requestGoodList.Malls = InitUser.Choose_mall[i];
-                BackData backData = Good_List.Get(requestGoodList);
+                requestGoodList GoodList = new requestGoodList();
+                GoodList.Malls = InitUser.Choose_mall[i];
+                if (IsOnale)
+                    GoodList.is_onsale = 1;
+                BackData backData = Good_List.Get(GoodList);
                 if (backData.Code != 0)//出错直接结束查询
                 {
                     ReadServerData = backData;
@@ -127,7 +165,8 @@ namespace jingkeyun.Pinduoduo
                     request.Malls = InitUser.Choose_mall[i];
                     request.page = page;
                     request.page_size = 100;
-
+                    if (IsOnale)
+                        request.is_onsale = 1;
                     requestGoods.Add(request);
                     max -= 100;
                     page++;
@@ -149,7 +188,7 @@ namespace jingkeyun.Pinduoduo
                 }
                 catch (Exception ex)
                 {
-                    UIMessageBox.Show(ex.Message);
+                    MyMessageBox.Show(ex.Message);
                 }
             }
 
@@ -209,17 +248,27 @@ namespace jingkeyun.Pinduoduo
         bool isComplete = false;
         bool isFirst = true;
         Thread thr, thr1;
+        //商品列表数量
+        int TableSum =0;
         private void ShowData()
         {
+
             if (!isFirst)
             {
                 //完成数据刷新时
-                if (this.列表.Rows.Count > 0)//非第一次渲染只更新列表最大值
+                if (TableSum == uiPagination1.PageSize)//非第一次渲染只更新列表最大值
                 {
                     uiPagination1.TotalCount = AllGood.Count;
                     UpdLog($"成功读取{uiPagination1.TotalCount}条数据");
                     return;
                 }
+                if (isComplete)//全部数据搞完
+                {
+                    timer1.Stop();
+                    timer2.Stop();
+                }
+                else
+                    return;
             }
             if (isFirst)
             {
@@ -228,19 +277,21 @@ namespace jingkeyun.Pinduoduo
             GoodsId.Clear();
             allImage.Clear();
             Url.Clear();
-            this.列表.Rows.Clear();
             if (ReadServerData.Code != 0)
             {
                 timer1.Stop();
-                uiProgressIndicator1.Visible = false;
-                UIMessageBox.ShowError("读取商品错误" + ReadServerData.Mess);
+                MyMessageBox.IsShowLoading = false;
+                uiProgressIndicator1.Visible=false;
+                MyMessageBox.ShowError("读取商品错误" + ReadServerData.Mess);
                 UpdLog("读取商品错误" + ReadServerData.Mess);
                 return;
             }
             if (AllGood.Count == 0)
             {
                 timer1.Stop();
+                jsObject.setData(AllGood, Chrome);
                 uiProgressIndicator1.Visible = false;
+                MyMessageBox.IsShowLoading = false;
                 uiPagination1.TotalCount = 0;
                 return;
             }
@@ -258,17 +309,9 @@ namespace jingkeyun.Pinduoduo
             {
                 //根据id获取数据
                 List<string> goodIds = new List<string>();
-                if (txtIds.Text.Trim().Contains("，"))
+                if (txtIds.Text.Trim().Contains("\r\n"))
                 {
-                    goodIds = txtIds.Text.Trim().Split('，').ToList();
-                }
-                else if (txtIds.Text.Trim().Contains(" "))
-                {
-                    goodIds = txtIds.Text.Trim().Split(' ').ToList();
-                }
-                else if (txtIds.Text.Trim().Contains(","))
-                {
-                    goodIds = txtIds.Text.Trim().Split(',').ToList();
+                    goodIds = txtIds.Text.Trim().Split("\r\n").ToList();
                 }
                 else
                 {
@@ -285,88 +328,69 @@ namespace jingkeyun.Pinduoduo
             if (checkBox2.Checked)
             {
                 //违规词筛选
-                BackData data = Offend_Word.get();
-                var dataJson = JsonConvert.SerializeObject(data.Data);
-                List<string> Words = JsonConvert.DeserializeObject<List<string>>(dataJson);
+                List<OffenWord> Words = Offend_Word.GetAll();
                 if (Words != null)
                 {
                     List<GoodListResponse> AllMatch = new List<GoodListResponse>();
                     foreach (var word in Words)
                     {
-                        List<GoodListResponse> Match = detailModels.Where(name => name.goods_name.Contains(word)).ToList();
+                        List<GoodListResponse> Match = detailModels.Where(name => name.goods_name.Contains(word.word)).ToList();
                         AllMatch.AddRange(Match);
                     }
                     detailModels = AllMatch.DistinctBy(x => x.goods_id).ToList();
                 }
 
             }
+            if (ddlquantity.SelectedIndex > 0)
+            {
+                switch (ddlquantity.SelectedIndex)
+                {
+                    case 1:
+                        detailModels = detailModels.Where(x => x.goods_quantity >= MyConvert.ToInt(txtquantity.Text)).ToList();
+                        break;
+                    case 2:
+                        detailModels = detailModels.Where(x => x.goods_quantity <= MyConvert.ToInt(txtquantity.Text)).ToList();
+                        break;
+                }
+            }
             uiPagination1.TotalCount = detailModels.Count;
-
+            //uiPagination1.PageSize = 3;//测试用
             int skipCount = (uiPagination1.ActivePage - 1) * uiPagination1.PageSize;
             detailModels = detailModels.Skip(skipCount).Take(uiPagination1.PageSize).ToList();
 
+            //渲染数据
+            jsObject.setData(detailModels, Chrome);
+            TableSum = detailModels.Count;
+
             foreach (var detail in detailModels)
             {
-                int i = this.列表.Rows.Add();
-                列表.Rows[i].Cells["Good_Id"].Value=detail.goods_id;
-                列表.Rows[i].Cells["Good_Name"].Value = detail.goods_name;// + "\r\nID:" + detail.goods_id;
-                列表.Rows[i].Cells["model"].Value = detail;
-                列表.Rows[i].Cells["Sku"].Value = detail.sku_list.Count;
-                列表.Rows[i].Cells["quantity"].Value = detail.goods_quantity;
-                列表.Rows[i].Cells["statue"].Value = detail.is_onsale == 1 ? "在售中" : "已下架";
-                列表.Rows[i].Cells["mall"].Value = detail.Mallinfo.mall_name;
-
-                //走线程
-                Url.Add(detail.thumb_url);
-
                 GoodsId.Add(new RequstGoodDetail(detail.goods_id, detail.Mallinfo));
+                Url.Add(detail.thumb_url);
             }
+            MyMessageBox.IsShowLoading = false;
             uiProgressIndicator1.Visible = false;
 
-            列表.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView_RowPostPaint);
-            ShowPic = true;
-            timer2.Start();
             thr = new Thread(new ThreadStart(GetDetail));
             thr.IsBackground = true;
             thr.Start();
 
-            allImage = new Image[Url.Count].ToList();
 
+            allImage = new Image[Url.Count].ToList();
             Parallel.For(0, Url.Count, i =>
             {
                 Image image = Image.FromStream(System.Net.WebRequest.Create(Url[i]).GetResponse().GetResponseStream());
                 allImage[i] = image;
             });
+
             UpdLog($"成功读取{uiPagination1.TotalCount}条数据");
         }
+
+
         List<RequstGoodDetail> GoodsId = new List<RequstGoodDetail>();
         /// <summary>
         /// 当前所有商品
         /// </summary>
         List<Goods_detailModel> Goodmodels = new List<Goods_detailModel>();
-
-        private void dataGridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            try
-            {
-                DataGridView dgv = sender as DataGridView;
-                Rectangle rectangle = new Rectangle(e.RowBounds.Location.X,
-                                                    e.RowBounds.Location.Y,
-                                                    dgv.RowHeadersWidth - 4,
-                                                    e.RowBounds.Height);
-
-
-                TextRenderer.DrawText(e.Graphics, (e.RowIndex + 1).ToString(),
-                                        dgv.RowHeadersDefaultCellStyle.Font,
-                                        rectangle,
-                                        dgv.RowHeadersDefaultCellStyle.ForeColor,
-                                        TextFormatFlags.VerticalCenter | TextFormatFlags.Right);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
         private void GetDetail()
         {
             try
@@ -377,94 +401,18 @@ namespace jingkeyun.Pinduoduo
                 {
                     Goodmodels = JsonConvert.DeserializeObject<List<Goods_detailModel>>(backMsg.Mess);
                 }
-                ShowPrice = true;
             }
             catch (Exception ex)
             {
-
-            }
-        }
-        bool ShowPic = false;
-        bool ShowPrice = false;
-        private void timer3_Tick(object sender, EventArgs e)
-        {
-            if (ShowPrice)
-            {
-                //try
-                //{
-                //    for (int i = 0; i < Goodmodels.Count; i++)
-                //    {
-                //        var skuP = Goodmodels[i].sku_list.OrderBy(x => x.multi_price).ToList();
-
-                //        string PriceString = "拼单价：￥";
-                //        if (skuP[0].multi_price == skuP[skuP.Count - 1].multi_price)
-                //        {
-                //            PriceString += skuP[0].multi_price / 100.00;
-                //        }
-                //        else
-                //        {
-                //            PriceString += skuP[0].multi_price / 100.00 + "--" + skuP[skuP.Count - 1].multi_price / 100.00;
-                //        }
-
-                //        列表.Rows[i].Cells["price"].Value = PriceString;
-                //        PriceString = "\r\n单买价：￥";
-                //        var skuD = Goodmodels[i].sku_list.OrderBy(x => x.price).ToList();
-                //        if (skuD[0].multi_price == skuD[skuP.Count - 1].multi_price)
-                //        {
-                //            PriceString += skuD[0].multi_price / 100.00;
-                //        }
-                //        else
-                //        {
-                //            PriceString += skuD[0].multi_price / 100.00 + "--" + skuD[skuD.Count - 1].multi_price / 100.00;
-                //        }
-                //        列表.Rows[i].Cells["price"].Value += PriceString;
-                //        列表.Rows[i].Cells["price"].Value += "\r\n参考价：￥" + Goodmodels[i].market_price / 100.00;
-                //    }
-                ShowPrice = false;
-                timer3.Stop();
-                //}
-                //catch (Exception ex)
-                //{
-
-                //}
             }
         }
 
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            if (allImage.Count != 列表.Rows.Count)
-            {
-                return;
-            }
-            if (ShowPic)
-            {
-                try
-                {
-                    for (int i = 0; i < allImage.Count; i++)
-                    {
-                        列表.Rows[i].Cells["Images"].Value = allImage[i];
-                    }
-                    ShowPic = false;
-                    timer2.Stop();
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-        }
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (ReadServerDataState)
             {
                 ShowData();
                 ReadServerDataState = false;
-                if (isComplete)
-                {
-                    isComplete = false;
-                    timer1.Stop();
-                }
-
             }
         }
         bool ReadServerDataState = false;
@@ -474,61 +422,80 @@ namespace jingkeyun.Pinduoduo
         {
             ReadData();
         }
+        private void clearMemory_Click(object sender, EventArgs e)
+        {
+            if (MyMessageBox.ShowAsk("是否清除本地缓存？"))
+            {
+                flag_onsale_down = false;
+                flag_All_down = false;
+                AllGood.Clear();
+                uiButton1_Click(null, null);
+            }
+        }
 
+        bool flag_onsale_down = false;//在售中是否缓存
+        bool flag_All_down=false;//全部数据是否缓存
         private void uiButton1_Click(object sender, EventArgs e)
         {
+            if (InitUser.Choose_mall.Count == 0)
+            {
+                MyMessageBox.ShowError("请先选择店铺！");
+                return;
+            }
             UpdLog("开始查询！");
+            
             if (uiPagination1.ActivePage != 1)
                 uiPagination1.ActivePage = 1;
-            ReadData();
+            //选中在售，且未下载缓存
+            if (!flag_onsale_down && ddlOnsale.SelectedIndex == 1)
+            {
+                MyMessageBox.ShowLoading();
+                timer1.Start();
+                timer2.Start();
+                ReadServerDataState = false;
+                isFirst = true;
+                MyMethodDelegate methodDelegate = new MyMethodDelegate(ListData);
+                // 创建线程实例，并传入委托实例作为ThreadStart的参数  
+                Thread t = new Thread(() => methodDelegate(true));
+                t.IsBackground = true;
+                // 启动线程  
+                t.Start();
+
+                flag_onsale_down = true;
+            }
+            else if (!flag_All_down && ddlOnsale.SelectedIndex != 1)//未选在售，且未下载缓存
+            {
+                MyMessageBox.ShowLoading();
+                AllGood.Clear();
+                timer1.Start();
+                timer2.Start();
+                ReadServerDataState = false;
+                isFirst = true;
+                MyMethodDelegate methodDelegate = new MyMethodDelegate(ListData);
+                // 创建线程实例，并传入委托实例作为ThreadStart的参数  
+                Thread t = new Thread(() => methodDelegate(false));
+                t.IsBackground = true;
+                // 启动线程  
+                t.Start();
+
+                flag_All_down =true;
+                flag_onsale_down=true;
+            }
+            else//其他情况直接缓存中查找
+            {
+                ReadData();
+            }
             UpdLog("查询结束！");
         }
 
         int cnt = 0;
-        private void 列表_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (e.ColumnIndex == 0)
-            {
-                DataGridView Obj = (DataGridView)sender;
-                DataGridViewCheckBoxCell ifcheck = (DataGridViewCheckBoxCell)Obj.Rows[e.RowIndex].Cells["check"];
-                ifcheck.Value = !Convert.ToBoolean(ifcheck.Value);
-
-                if (Convert.ToBoolean(ifcheck.Value))
-                {
-                    cnt++;
-                }
-                else
-                {
-                    cnt--;
-                }
-                uiLabel9.Text = cnt.ToString();
-            }
-        }
-
-        private void 列表_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridView Obj = (DataGridView)sender;
-            //数据复原，只允许复制数据，不允许修改数据
-            switch (e.ColumnIndex)
-            {
-                case 2://商品id
-                    Obj.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = (Obj.Rows[e.RowIndex].Cells["model"].Value as GoodListResponse).goods_id;
-                    break;
-                case 3://商品名称
-                    Obj.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = (Obj.Rows[e.RowIndex].Cells["model"].Value as GoodListResponse).goods_name;
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #region 批量修改
         private void uiButton3_Click(object sender, EventArgs e)
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ///批量修改标题
@@ -539,9 +506,9 @@ namespace jingkeyun.Pinduoduo
             {
                 foreach (var good in Form.GoodsModel)
                 {
-                    var NewGood = AllGood.Find(x => x.goods_id == good.goods_id);
-                    NewGood=good;
-                    NewGood.is_onsale = 1;
+                    AllGood.Find(x => x.goods_id == good.goods_id).goods_name=good.goods_name;
+                    AllGood.Find(x => x.goods_id == good.goods_id).is_onsale = 1;
+
                 }
                 ReadData();
                 UpdLog($"成功修改{checkedGood.Count}个商品的标题！");
@@ -553,23 +520,7 @@ namespace jingkeyun.Pinduoduo
         private List<Image> checkedImage = new List<Image>();
         private List<Image> allImage = new List<Image>();
         private List<string> Url = new List<string>();
-        /// <summary>
-        /// 获取选中商品
-        /// </summary>
-        private int getChecked()
-        {
-            checkedGood.Clear();
-            checkedImage.Clear();
-            for (int i = 0; i < 列表.Rows.Count; i++)
-            {
-                if (Convert.ToBoolean(列表.Rows[i].Cells["check"].Value))
-                {
-                    checkedGood.Add(列表.Rows[i].Cells["model"].Value as GoodListResponse);
-                    checkedImage.Add(列表.Rows[i].Cells["Images"].Value as Image);
-                }
-            }
-            return checkedGood.Count;
-        }
+
         /// <summary>
         /// 修改上下架
         /// </summary>
@@ -579,7 +530,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeOnsale From = new ChangeOnsale();
@@ -588,8 +539,7 @@ namespace jingkeyun.Pinduoduo
             {
                 foreach (var good in From.GoodsModel)
                 {
-                    var NewGood = AllGood.Find(x => x.goods_id == good.goods_id);
-                    NewGood = good;
+                    AllGood.Find(x => x.goods_id == good.goods_id).is_onsale=good.is_onsale;
                 }
                 ReadData();
                 UpdLog($"成功修改{checkedGood.Count}个商品上下架状态！");
@@ -605,7 +555,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeTemplate From = new ChangeTemplate();
@@ -625,7 +575,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeShipmentTime From = new ChangeShipmentTime();
@@ -646,16 +596,26 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
-            ///批量修改标题
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ///批量修改短标题
             ChangeXTitle Form = new ChangeXTitle();
             Form.goods_DetailModels = Goodmodels;
             Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
+                Goodmodels = Form.goods_DetailModels;
                 UpdLog($"成功修改{checkedGood.Count}个商品的短标题！");
                 //ReadData();
             }
@@ -665,20 +625,27 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
-            ///批量修改标题
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
             ChangeQuantity Form = new ChangeQuantity();
-            Form.Images = checkedImage;
+            Form.goods_DetailModels = Goodmodels;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
                 foreach (var good in Form.GoodsModel)
                 {
-                    var NewGood = AllGood.Find(x => x.goods_id == good.goods_id);
-                    NewGood = good;
-                    NewGood.is_onsale = 1;
+                    AllGood.Find(x => x.goods_id == good.goods_id).goods_quantity=good.goods_quantity;
+                    AllGood.Find(x => x.goods_id == good.goods_id).sku_list = good.sku_list;
                 }
                 ReadData();
                 UpdLog($"成功修改{checkedGood.Count}个商品的库存！");
@@ -689,14 +656,22 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
-            ///批量修改标题
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ///批量修改sku名称
             ChangeSkuName Form = new ChangeSkuName();
             Form.goods_DetailModels = Goodmodels;
-            Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
                 UpdLog($"成功修改{checkedGood.Count}个商品的sku名称！");
@@ -708,14 +683,22 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
-            ///批量修改标题
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
             ChangeSkuPrice Form = new ChangeSkuPrice();
             Form.goods_DetailModels = Goodmodels;
             Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
                 UpdLog($"成功修改{checkedGood.Count}个商品的价格！");
@@ -723,16 +706,7 @@ namespace jingkeyun.Pinduoduo
             }
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            for (int i = 0; i < 列表.Rows.Count; i++)
-            {
-                列表.Rows[i].Cells["check"].Value = checkBox1.Checked;
 
-            }
-            cnt = checkBox1.Checked ? 列表.Rows.Count : 0;
-            uiLabel9.Text = cnt.ToString();
-        }
         /// <summary>
         /// 选择店铺
         /// </summary>
@@ -740,48 +714,31 @@ namespace jingkeyun.Pinduoduo
         /// <param name="e"></param>
         private void uiButton2_Click_1(object sender, EventArgs e)
         {
-            
+
             //所有已授权的店铺显示
             ChooseMall f = new ChooseMall();
             if (f.ShowDialog() == DialogResult.OK)
             {
                 txtMalls.Text = InitUser.Choose_mall.Count + "个店铺";
                 UpdLog($"选择{InitUser.Choose_mall.Count}个店铺");
+                //强制刷新页面
+                flag_onsale_down = false;
+                flag_All_down = false;
+                AllGood.Clear();
+                uiButton1_Click(null, null);
             }
         }
 
-        /// <summary>
-        /// 读取选中店铺下的商品
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void uiButton6_Click(object sender, EventArgs e)
-        {
-            if (InitUser.Choose_mall.Count == 0)
-            {
-                UIMessageBox.ShowError("请先选择店铺！");
-                return;
-            }
-            UpdLog($"开始读取商品！");
-            uiProgressIndicator1.Visible = true;
-            timer1.Start();
-            ReadServerDataState = false;
-            isFirst = true;
-            MyMethodDelegate methodDelegate = new MyMethodDelegate(ListData);
-            // 创建线程实例，并传入委托实例作为ThreadStart的参数  
-            Thread t = new Thread(() => methodDelegate());
-            t.IsBackground = true;
-            // 启动线程  
-            t.Start();
-        }
-        public delegate void MyMethodDelegate();
+
+
+        public delegate void MyMethodDelegate(bool flag);
 
         bool flag = false;
         private void 批量修改满两件折扣ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeTwoDiscounts From = new ChangeTwoDiscounts();
@@ -796,7 +753,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeLimit From = new ChangeLimit();
@@ -811,7 +768,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeLimit From = new ChangeLimit();
@@ -826,7 +783,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeIsFolt From = new ChangeIsFolt();
@@ -841,7 +798,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeBadClaim From = new ChangeBadClaim();
@@ -856,17 +813,25 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
-
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
             ChangeGoodDesc Form = new ChangeGoodDesc();
             Form.goods_DetailModels = Goodmodels;
             Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
-                //Goodmodels=Form.goods_DetailModels;
+                Goodmodels = Form.goods_DetailModels;
                 UpdLog($"成功修改{checkedGood.Count}个商品的商品描述！");
                 //ReadData();
             }
@@ -876,13 +841,22 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
+            }
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
             }
             ChangeSlide Form = new ChangeSlide();
             Form.goods_DetailModels = Goodmodels;
             Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
                 UpdLog($"成功修改{checkedGood.Count}个商品的轮播图！");
@@ -894,13 +868,22 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
+            }
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
             }
             ChangeDetailImage Form = new ChangeDetailImage();
             Form.goods_DetailModels = Goodmodels;
             Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
                 UpdLog($"成功修改{checkedGood.Count}个商品的详情图！");
@@ -911,7 +894,7 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeWritePic Form = new ChangeWritePic();
@@ -929,13 +912,22 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
+            }
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
             }
             ChangeLongPic Form = new ChangeLongPic();
             Form.goods_DetailModels = Goodmodels;
             Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
                 UpdLog($"成功修改{checkedGood.Count}个商品的长图！");
@@ -947,39 +939,145 @@ namespace jingkeyun.Pinduoduo
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
+            }
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
             }
             ChangeGoodCode Form = new ChangeGoodCode();
             Form.goods_DetailModels = Goodmodels;
             Form.Images = checkedImage;
             Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
             if (Form.ShowDialog() == DialogResult.OK)
             {
                 UpdLog($"成功修改{checkedGood.Count}个商品的商品编码！");
                 //ReadData();
             }
         }
-        /// <summary>
-        /// 重置
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void uiSymbolButton4_Click(object sender, EventArgs e)
+
+        private void 批量修改商品属性ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            txtIds.Text = "";
-            txtGoodName.Text = "";
-            ddlOnsale.SelectedIndex = 0;
-            checkBox2.Checked = false;
-            uiPagination1.ActivePage = 1;
-            UpdLog("过滤条件已重置！");
+            if (getChecked() == 0)
+            {
+                MyMessageBox.Show("请至少选择一个商品！");
+                return;
+            }
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ChangeAttr Form = new ChangeAttr();
+            Form.DetailModel = Goodmodels.Where(x=>checkedGood.FindIndex(i=>i.goods_id==x.goods_id)>-1).ToList();
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (Form.ShowDialog() == DialogResult.OK)
+            {
+                UpdLog($"成功修改{checkedGood.Count}个商品的商品属性！");
+                //ReadData();
+            }
         }
 
+        private void btnSelect_Click(object sender, EventArgs e)
+        {
+            //选中区间的商品
+            int begin = MyConvert.ToInt(beginS.Text) - 1;
+            int end = MyConvert.ToInt(endS.Text);
+            jsObject.setSelectiom(begin, end, Chrome);
+        }
+
+        private void beginS_TextChanged(object sender, EventArgs e)
+        {
+            beginS.Maximum = uiPagination1.PageSize < beginS.Maximum ? uiPagination1.PageSize : beginS.Maximum;
+            int i = MyConvert.ToInt(beginS.Text);
+            beginS.Text = i.ToString();
+            endS.Minimum = i;
+        }
+
+        private void endS_TextChanged(object sender, EventArgs e)
+        {
+            endS.Maximum = uiPagination1.PageSize;
+            int i = MyConvert.ToInt(endS.Text);
+            endS.Text = i.ToString();
+        }
+
+        private void txtIds_Enter(object sender, EventArgs e)
+        {
+            uiPanel3.Controls.SetChildIndex(txtIds, 0);
+            txtIds.Height = 70;
+        }
+
+        private void txtIds_Leave(object sender, EventArgs e)
+        {
+            txtIds.Height = 29;
+        }
+
+
+        private void 修改商品预售ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (getChecked() == 0)
+            {
+                MyMessageBox.Show("请至少选择一个商品！");
+                return;
+            }
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ChangePreSale Form = new ChangePreSale();
+            Form.GoodsModel = Goodmodels.Where(x => checkedGood.FindIndex(i => i.goods_id == x.goods_id) > -1).ToList();
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (Form.ShowDialog() == DialogResult.OK)
+            {   
+                UpdLog($"成功修改{checkedGood.Count}个商品的商品预售！");
+                //ReadData();
+            }
+        }
+
+
+        private void 修改规格预售ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (getChecked() == 0)
+            {
+                MyMessageBox.Show("请至少选择一个商品！");
+                return;
+            }
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ChangeSkuPre Form = new ChangeSkuPre();
+            Form.goods_DetailModels = Goodmodels.Where(x => checkedGood.FindIndex(i => i.goods_id == x.goods_id) > -1).ToList();
+            Form.GoodsModel = checkedGood;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (Form.ShowDialog() == DialogResult.OK)
+            {
+                UpdLog($"成功修改{checkedGood.Count}个商品的商品预售！");
+                //ReadData();
+            }
+        }
         private void 批量修改叶子类目ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (getChecked() == 0)
             {
-                UIMessageBox.Show("请至少选择一个商品！");
+                MyMessageBox.Show("请至少选择一个商品！");
                 return;
             }
             ChangeCatId Form = new ChangeCatId();
@@ -992,5 +1090,465 @@ namespace jingkeyun.Pinduoduo
         }
         #endregion
 
+        #region 单个修改
+
+        public void showMenu(GoodListResponse Model)
+        {
+            SelectModel = Model;
+            Invoke(new MethodInvoker(delegate
+            {
+                this.MenuStripGood.Show(MousePosition.X, MousePosition.Y);
+            }));
+        }
+        public void getSelect(List<GoodListResponse> goods)
+        {
+            ///获取选中的数据
+            Invoke(new MethodInvoker(delegate
+            {
+                uiLabel9.Text = goods.Count.ToString();
+            }));
+            checkedGood = goods;
+        }
+        /// <summary>
+        /// 获取选中商品
+        /// </summary>
+        private int getChecked()
+        {
+            //获取图片
+            //Image image = null;
+            checkedImage.Clear();
+            foreach (GoodListResponse good in checkedGood)
+            {
+                int i = Url.FindIndex(x => x == good.thumb_url);
+                checkedImage.Add(allImage[i]);
+            }
+            return checkedGood.Count;
+        }
+        GoodListResponse SelectModel;
+        private void toolStripMenuItem11_Click(object sender, EventArgs e)
+        {
+            //修改标题
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditInfo f = new EditInfo();
+            f.pageType = 0;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            f.GoodsModel = model;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).goods_name = f.GoodsModel.goods_name;
+                AllGood.FirstOrDefault(x => x.goods_id == model.goods_id).goods_name = f.GoodsModel.goods_name;
+                ReadData();
+            }
+        }
+
+        private void toolStripMenuItem9_Click(object sender, EventArgs e)
+        {
+            //商品描述
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditInfo f = new EditInfo();
+            f.pageType = 2;
+            
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            f.GoodsModel = model;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).goods_desc = f.DetailModel.goods_desc;
+            }
+        }
+
+        private void toolStripMenuItem12_Click(object sender, EventArgs e)
+        {
+            //商品短标题
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditInfo f = new EditInfo();
+            f.pageType = 1;
+            
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            f.GoodsModel = model;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).tiny_name = f.DetailModel.tiny_name;
+            }
+        }
+
+        private void toolStripMenuItem16_Click(object sender, EventArgs e)
+        {
+            //单次限量
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditSet f = new EditSet();
+            f.pageType = 1;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).order_limit = f.DetailModel.order_limit;
+            }
+        }
+
+        private void toolStripMenuItem15_Click(object sender, EventArgs e)
+        {
+            //限购
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditSet f = new EditSet();
+            f.pageType = 2;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).buy_limit = f.DetailModel.buy_limit;
+            }
+        }
+
+        private void toolStripMenuItem18_Click(object sender, EventArgs e)
+        {
+            //坏了包赔
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditSet f = new EditSet();
+            f.pageType = 3;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).bad_fruit_claim = f.DetailModel.bad_fruit_claim;
+            }
+        }
+
+        private void toolStripMenuItem17_Click(object sender, EventArgs e)
+        {
+            //假一赔十
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditSet f = new EditSet();
+            f.pageType = 4;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).is_folt = f.DetailModel.is_folt;
+            }
+        }
+
+        private void 修改运费模板ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //运费模板
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditSet f = new EditSet();
+            f.pageType = 5;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).cost_template_id = f.DetailModel.cost_template_id;
+            }
+        }
+
+        private void toolStripMenuItem14_Click(object sender, EventArgs e)
+        {
+            //发货时间
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditSet f = new EditSet();
+            f.pageType = 6;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).shipment_limit_second = f.DetailModel.shipment_limit_second;
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).delivery_one_day = f.DetailModel.delivery_one_day;
+            }
+        }
+
+
+        public void DoSale(GoodListResponse model)
+        {
+            SelectModel = model;
+            修改上下架ToolStripMenuItem_Click(null, null);
+        }
+        private void 修改上下架ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GoodListResponse model = SelectModel;
+            var str = model.is_onsale == 1 ? "下架" : "上架";
+            if (MyMessageBox.ShowAsk($"是否修改该商品状态为{str}"))
+            {
+                //执行修改
+                requsetSaleBody requset = new requsetSaleBody();
+                requset.is_onsale = model.is_onsale == 1 ? 0 : 1;
+                requset.goods_id = model.goods_id;
+                requset.Malls = model.Mallinfo;
+
+                BackMsg backMsg = Good_Sale.SetOne(requset);
+                if (backMsg.Code == 0)
+                {
+                    UIMessageTip.Show("修改成功！");
+                    model.is_onsale = requset.is_onsale;
+                    AllGood.Find(x=>x.goods_id==model.goods_id).is_onsale=model.is_onsale;
+                    ReadData();
+                }
+                else
+                {
+                    MyMessageBox.ShowError("修改失败！" + backMsg.Mess);
+                }
+            }
+        }
+
+        private void toolStripMenuItem8_Click(object sender, EventArgs e)
+        {
+            //轮播图
+            GoodListResponse model = SelectModel;
+            List<GoodListResponse> models = new List<GoodListResponse>();
+            models.Add(model);
+            List<Image> images = new List<Image>();
+            images.Add(Image.FromStream(System.Net.WebRequest.Create(SelectModel.thumb_url).GetResponse().GetResponseStream()));
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ChangeSlide Form = new ChangeSlide();
+            Form.goods_DetailModels = Goodmodels;
+            Form.Text = "修改轮播图";
+            Form.Images = images;
+            Form.GoodsModel = models;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (Form.ShowDialog() == DialogResult.OK)
+            {
+                UpdLog($"成功修改{checkedGood.Count}个商品的轮播图！");
+            }
+        }
+
+        private void toolStripMenuItem10_Click(object sender, EventArgs e)
+        {
+            //详情图
+            GoodListResponse model = SelectModel;
+            List<GoodListResponse> models = new List<GoodListResponse>();
+            models.Add(model);
+            List<Image> images = new List<Image>();
+            images.Add(Image.FromStream(System.Net.WebRequest.Create(SelectModel.thumb_url).GetResponse().GetResponseStream()));
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ChangeDetailImage Form = new ChangeDetailImage();
+            Form.goods_DetailModels = Goodmodels;
+            Form.Text = "修改详情图";
+            Form.Images = images;
+            Form.GoodsModel = models;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (Form.ShowDialog() == DialogResult.OK)
+            {
+                UpdLog($"成功修改{checkedGood.Count}个商品的详情图！");
+                //ReadData();
+            }
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            txtGoodSum.Text = $"({AllGood.Count})";
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            //修改库存
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditQuantity f = new EditQuantity();
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == SelectModel.goods_id);
+            f.GoodsModel = SelectModel;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                AllGood.Find(x=>x.goods_id==SelectModel.goods_id).goods_quantity= f.GoodsModel.goods_quantity;
+                ReadData();
+            }
+        }
+
+        private void toolStripMenuItem7_Click(object sender, EventArgs e)
+        {
+            //修改叶子类目
+            EditCat f = new EditCat();
+            f.GoodsModel = SelectModel;
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+            }
+        }
+
+        private void toolStripMenuItem13_Click(object sender, EventArgs e)
+        {
+            //修改规格编码
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditCode f = new EditCode();
+            f.goods_DetailModels = Goodmodels.FirstOrDefault(x => x.goods_id == SelectModel.goods_id);
+            f.GoodsModel = SelectModel;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+            }
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            //修改sku Name
+            GoodListResponse model = SelectModel;
+            List<GoodListResponse> models = new List<GoodListResponse>();
+            models.Add(model);
+            List<Image> images = new List<Image>();
+            images.Add(Image.FromStream(System.Net.WebRequest.Create(SelectModel.thumb_url).GetResponse().GetResponseStream()));
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            ///批量修改sku名称
+            ChangeSkuName Form = new ChangeSkuName();
+            Form.goods_DetailModels = Goodmodels;
+            Form.GoodsModel = models;
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (Form.ShowDialog() == DialogResult.OK)
+            {
+                UpdLog($"成功修改{checkedGood.Count}个商品的sku名称！");
+                ReadData();
+            }
+        }
+
+        private void 修改商品属性ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditAttr f = new EditAttr();
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+            }
+        }
+
+      
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //修改两件折扣
+            GoodListResponse model = SelectModel;
+            MyMessageBox.ShowLoading();
+            if (thr != null)
+            {
+                while (thr.ThreadState == System.Threading.ThreadState.Background)
+                {
+                }
+            }
+            EditSet f = new EditSet();
+            f.pageType = 0;
+            f.DetailModel = Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id);
+            MyMessageBox.IsShowLoading = false;
+            Thread.Sleep(100);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                Goodmodels.FirstOrDefault(x => x.goods_id == model.goods_id).two_pieces_discount = f.DetailModel.two_pieces_discount;
+            }
+        }
+
+        #endregion
     }
 }

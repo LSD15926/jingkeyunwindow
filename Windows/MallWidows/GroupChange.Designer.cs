@@ -38,14 +38,14 @@
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.panel2 = new System.Windows.Forms.Panel();
             this.列表 = new System.Windows.Forms.DataGridView();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.uiButton2 = new Sunny.UI.UIButton();
-            this.uiButton1 = new Sunny.UI.UIButton();
             this.check = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Mall_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Mall_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Expire = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.uiButton2 = new Sunny.UI.UIButton();
+            this.uiButton1 = new Sunny.UI.UIButton();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.列表)).BeginInit();
@@ -56,7 +56,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox1.Location = new System.Drawing.Point(65, 6);
+            this.checkBox1.Location = new System.Drawing.Point(66, 7);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(15, 14);
             this.checkBox1.TabIndex = 31;
@@ -86,6 +86,7 @@
             this.ddlMall.MinimumSize = new System.Drawing.Size(63, 0);
             this.ddlMall.Name = "ddlMall";
             this.ddlMall.Padding = new System.Windows.Forms.Padding(0, 0, 30, 2);
+            this.ddlMall.RectColor = System.Drawing.Color.Silver;
             this.ddlMall.Size = new System.Drawing.Size(186, 32);
             this.ddlMall.Style = Sunny.UI.UIStyle.Custom;
             this.ddlMall.SymbolSize = 24;
@@ -97,9 +98,10 @@
             // labelX1
             // 
             this.labelX1.AutoSize = true;
-            this.labelX1.Location = new System.Drawing.Point(52, 18);
+            this.labelX1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelX1.Location = new System.Drawing.Point(52, 15);
             this.labelX1.Name = "labelX1";
-            this.labelX1.Size = new System.Drawing.Size(90, 23);
+            this.labelX1.Size = new System.Drawing.Size(90, 26);
             this.labelX1.TabIndex = 0;
             this.labelX1.Text = "店铺分组：";
             // 
@@ -178,44 +180,6 @@
             this.列表.TabIndex = 170;
             this.列表.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.列表_CellContentClick);
             // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.uiButton2);
-            this.panel3.Controls.Add(this.uiButton1);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(1, 624);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(997, 47);
-            this.panel3.TabIndex = 39;
-            // 
-            // uiButton2
-            // 
-            this.uiButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.uiButton2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.uiButton2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton2.Location = new System.Drawing.Point(801, 7);
-            this.uiButton2.MinimumSize = new System.Drawing.Size(1, 1);
-            this.uiButton2.Name = "uiButton2";
-            this.uiButton2.Size = new System.Drawing.Size(88, 34);
-            this.uiButton2.TabIndex = 6;
-            this.uiButton2.Text = "取 消";
-            this.uiButton2.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton2.Click += new System.EventHandler(this.uiButton2_Click);
-            // 
-            // uiButton1
-            // 
-            this.uiButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.uiButton1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.uiButton1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton1.Location = new System.Drawing.Point(895, 7);
-            this.uiButton1.MinimumSize = new System.Drawing.Size(1, 1);
-            this.uiButton1.Name = "uiButton1";
-            this.uiButton1.Size = new System.Drawing.Size(88, 34);
-            this.uiButton1.TabIndex = 5;
-            this.uiButton1.Text = "确 认";
-            this.uiButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton1.Click += new System.EventHandler(this.uiButton1_Click);
-            // 
             // check
             // 
             this.check.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -257,6 +221,44 @@
             this.model.Name = "model";
             this.model.Visible = false;
             this.model.Width = 5;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.uiButton2);
+            this.panel3.Controls.Add(this.uiButton1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel3.Location = new System.Drawing.Point(1, 624);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(997, 47);
+            this.panel3.TabIndex = 39;
+            // 
+            // uiButton2
+            // 
+            this.uiButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.uiButton2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiButton2.Location = new System.Drawing.Point(801, 7);
+            this.uiButton2.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton2.Name = "uiButton2";
+            this.uiButton2.Size = new System.Drawing.Size(88, 34);
+            this.uiButton2.TabIndex = 6;
+            this.uiButton2.Text = "取 消";
+            this.uiButton2.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiButton2.Click += new System.EventHandler(this.uiButton2_Click);
+            // 
+            // uiButton1
+            // 
+            this.uiButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.uiButton1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiButton1.Location = new System.Drawing.Point(895, 7);
+            this.uiButton1.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton1.Name = "uiButton1";
+            this.uiButton1.Size = new System.Drawing.Size(88, 34);
+            this.uiButton1.TabIndex = 5;
+            this.uiButton1.Text = "确 认";
+            this.uiButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiButton1.Click += new System.EventHandler(this.uiButton1_Click);
             // 
             // GroupChange
             // 

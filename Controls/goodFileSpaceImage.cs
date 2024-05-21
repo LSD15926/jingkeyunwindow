@@ -1,24 +1,12 @@
 ﻿using jingkeyun.Class;
-using jingkeyun.Windows;
+using jingkeyun.Data;
 using Newtonsoft.Json;
 using Pdd_Models;
 using Pdd_Models.Models;
-using Sunny.UI;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Security.Policy;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using jingkeyun.Class;
-using jingkeyun.Data;
 
 namespace jingkeyun.Controls
 {
@@ -39,6 +27,18 @@ namespace jingkeyun.Controls
             set
             {
                 uiLabel1.Text = value;
+            }
+        }
+        private bool _BgColor=false;
+        public bool BgColor
+        {
+            get { return _BgColor; }
+            set {
+                _BgColor = value;
+                if (value)
+                {
+                    this.BackColor = Color.FromArgb(220,210,231);
+                }
             }
         }
 
@@ -70,12 +70,12 @@ namespace jingkeyun.Controls
             dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-
+                uiFlowLayoutPanel1.Controls[2].Controls.Clear();
                 string FileName = dialog.FileNames[0];
                 PictureBox pictureBox = new PictureBox();
-                pictureBox.Size = new Size(100, 100);
+                pictureBox.Size = new Size(75, 75);
                 pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                pictureBox.Image = LoadResizedImage(FileName, 100, 100);
+                pictureBox.Image = LoadResizedImage(FileName, 75, 75);
                 pictureBox.Cursor = Cursors.Hand;
                 pictureBox.Image.Tag = FileName;
                 pictureBox.MouseDown += PictureBox_MouseDown;
@@ -91,13 +91,13 @@ namespace jingkeyun.Controls
                         }
                         else
                         {
-                            UIMessageBox.ShowError("图片上传失败！" + backMsg.Mess);
+                            MyMessageBox.ShowError("图片上传失败！" + backMsg.Mess);
                             return;
                         }
                     }
                     catch (Exception ex)
                     {
-                        UIMessageBox.ShowError("图片上传失败！" + ex.Message);
+                        MyMessageBox.ShowError("图片上传失败！" + ex.Message);
                         return;
                     }
                 });

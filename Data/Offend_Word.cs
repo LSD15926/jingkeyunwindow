@@ -7,6 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using jingkeyun;
+using jingkeyun.Class;
+using System.Data;
+using System.Diagnostics;
+using Sunny.UI;
 
 namespace jingkeyun.Data
 {
@@ -28,5 +32,35 @@ namespace jingkeyun.Data
             }
             return backData;
         }
+
+        public static List<OffenWord> GetAll( string sql="")
+        {
+    
+            List<OffenWord> Offends=new List<OffenWord>();
+            try
+            {
+                string strSql = "select * from Offend where 1=1 "+sql;
+                DataSet ds = SQLiteHelper.ExecuteQuery(strSql);
+                DataTable dt = ds.Tables[0];//数据列表
+                foreach (DataRow dr in dt.Rows)
+                {
+                    OffenWord offenWord = new OffenWord();
+                    offenWord.word=dr["word"].ToString();
+                    offenWord.id = MyConvert.ToInt(dr["id"]);
+                    Offends.Add(offenWord);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+            return Offends;
+        }
+    }
+    public class OffenWord
+    {
+        public int id {  get; set; }
+        public string word { get; set; }
     }
 }

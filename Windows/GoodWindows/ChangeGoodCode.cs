@@ -14,13 +14,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using jingkeyun.Class;
 
 namespace jingkeyun.Windows
 {
     public partial class ChangeGoodCode : UIForm
     {
 
-        private List<Image> _images=new List<Image>();
+        private List<Image> _images = new List<Image>();
 
         public List<Image> Images
         {
@@ -29,7 +30,7 @@ namespace jingkeyun.Windows
         }
         public List<Goods_detailModel> goods_DetailModels { get; set; }
 
-        private List<GoodListResponse> _GoodsModel=new List<GoodListResponse>();
+        private List<GoodListResponse> _GoodsModel = new List<GoodListResponse>();
 
         public List<GoodListResponse> GoodsModel
         {
@@ -40,41 +41,27 @@ namespace jingkeyun.Windows
             set
             {
                 _GoodsModel = value;
+                uiLabel3.Text = value.Count.ToString();
                 //渲染页面
                 int cnt = 0;
                 foreach (var item in _GoodsModel)
                 {
                     var model = goods_DetailModels.FirstOrDefault(x => x.goods_id == item.goods_id);
-                    for (int i = 0; i < item.sku_list.Count; i++)
-                    {
-                        goodOutId User = new goodOutId();
-                        if (i == 0)
-                        {
-                            User.Image = Images[cnt];
-                            User.Title = item.goods_name + "\r\nID:" + item.goods_id;
-                        }
-                        User.Good_id = item.goods_id;
-                        User.Sku=item.sku_list[i];
-                        string skuName = "";
-                        foreach (var spec in item.sku_list[i].spec_details)
-                        {
-                            skuName += "/" + spec.spec_name;
-                        }
-                        if (!string.IsNullOrEmpty(skuName))
-                        {
-                            User.SkuName = skuName.Substring(1);
-                        }
-                        User.mallinfo=item.Mallinfo;
-                        User.outGood=model.outer_goods_id;
-                        var sku = model.sku_list.FirstOrDefault(x => x.sku_id == item.sku_list[i].sku_id);
-                        User.outSku =sku.out_sku_sn;
-                        User.sku_List = sku;
-                        uiFlowLayoutPanel1.Controls.Add(User);
-                    }
+
+                    goodOutId User = new goodOutId();
+                    User.Image = Images[cnt];
+                    User.Title = item.goods_name + "\r\nID:" + item.goods_id;
+                    User.Good = model;
+                    User.BgColor = cnt % 2 == 1;
+                    Ugood.Add(User);
                     cnt++;
                 }
+                uiFlowLayoutPanel1.SuspendLayout();
+                uiFlowLayoutPanel1.Controls.AddRange(Ugood.ToArray());
+                uiFlowLayoutPanel1.ResumeLayout();
             }
         }
+        List<goodOutId> Ugood = new List<goodOutId>();
         public ChangeGoodCode()
         {
             InitializeComponent();
@@ -84,17 +71,12 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
 
         }
 
@@ -105,55 +87,114 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
+            if (MyMessageBox.ShowAsk("是否提交修改？"))
             {
-                new UIPage().ShowProcessForm();
                 List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
-                RequstGoodEditModel model = new RequstGoodEditModel();
+                foreach (var User in Ugood)
+                {
+                    RequstGoodEditModel model = new RequstGoodEditModel();
+                    model.outer_goods_id = User.Good.outer_goods_id.ToString();
+                    model.ApiType = (int)GoodsEdit.商品编码;
+                    model.goods_id = User.Good.goods_id;
+                    model.Malls = User.Good.mall;
+                    model.sku_list = User.Good.sku_list;
+                    models.Add(model);
+                }
+                InitUser.RunningTask.Add("详情图" + stampNow, stampNow.ToString());
+                UIMessageTip.ShowOk("已提交至后台处理");
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += Worker_DoWork;
+                worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+                worker.RunWorkerAsync(models);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+        }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("详情图" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改商品编码与规格编码");
+        }
 
-                foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-                {                    
-                    if (item.GetType().Name != "goodOutId")
-                    {
-                        continue;
-                    }
-                    goodOutId User = (item as goodOutId);
-                    if (model.goods_id != 0 && model.goods_id != User.Good_id)//非同一商品
-                    {
-                        models.Add(model);
-                        model = new RequstGoodEditModel();
-                    }
-                    if (model.goods_id == 0)
-                    {
-                        model.outer_goods_id = User.outGood;
-                        model.ApiType = (int)GoodsEdit.商品编码;
-                        model.goods_id = User.Good_id;
-                        model.Malls = User.mallinfo;
-                    }
-                    Sku_listItem sku=new Sku_listItem();
-                    sku=User.sku_List;
-                    sku.out_sku_sn=User.outSku;
-                    model.sku_list.Add(sku);
-                }
-                models.Add(model);
-                BackMsg backMsg = Good_Edit.Edit(models);
-                if (backMsg.Code == 0)
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-                else
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
-                    return;
-                }
-                
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<RequstGoodEditModel> models = e.Argument as List<RequstGoodEditModel>;
+            RetMsg = Good_Edit.Edit(models);
+        }
+
+        private void uiButton4_Click(object sender, EventArgs e)
+        {
+            Goods_detailModel model = new Goods_detailModel();
+            foreach (var U in Ugood)
+            {
+                model = U.Good;
+                model.outer_goods_id = txtBegin.Text;
+                U.Good = model;
             }
         }
 
-       
+        private void uiButton3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Goods_detailModel model = new Goods_detailModel();
+                foreach (var U in Ugood)
+                {
+                    model = U.Good;
+                    model.sku_list[0].out_sku_sn = uiTextBox1.Text;
+                    U.Good = model;
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void uiButton7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Goods_detailModel model = new Goods_detailModel();
+                foreach (var U in Ugood)
+                {
+                    model = U.Good;
+                    model.sku_list[0].out_sku_sn = model.sku_list[0].out_sku_sn.Replace(txtOld.Text, txtNew.Text);
+                    U.Good = model;
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void uiButton5_Click(object sender, EventArgs e)
+        {
+            Goods_detailModel model = new Goods_detailModel();
+            foreach (var U in Ugood)
+            {
+                model = U.Good;
+                model.outer_goods_id = "";
+                U.Good = model;
+            }
+        }
+
+        private void uiButton6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Goods_detailModel model = new Goods_detailModel();
+                foreach (var U in Ugood)
+                {
+                    model = U.Good;
+                    model.sku_list[0].out_sku_sn = "";
+                    U.Good = model;
+                }
+            }
+            catch
+            {
+            }
+        }
     }
 }

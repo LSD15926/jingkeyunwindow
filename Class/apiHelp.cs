@@ -13,7 +13,7 @@ namespace jingkeyun
     public static class apiHelp
     {
 
-        public static string client_id = "2b0c43de6a3e468fbf748bba48b8ee5a";
+        public static string client_id = "ae44e9ca4a02482eb0c07bb3b8ee8165";
 
         public static string requestPost(string strUrl, string param, string Method = "POST")
         {

@@ -78,7 +78,7 @@ namespace Sunny.UI
 
         private int pagerCount = 7;
 
-        private int pageSize = 20;
+        private int pageSize = 50;
 
         private int totalCount = 0;
         private UILabel uiLabel1;
@@ -143,7 +143,7 @@ namespace Sunny.UI
             item.Value = 100;
             comPageSize.Items.Add(item);
 
-            comPageSize.SelectedIndex = 0;
+            comPageSize.SelectedIndex = 1;
         }
 
 
@@ -732,15 +732,22 @@ namespace Sunny.UI
             this.comPageSize.DataSource = null;
             this.comPageSize.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
             this.comPageSize.FillColor = System.Drawing.Color.White;
+            this.comPageSize.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(242)))), ((int)(((byte)(251)))));
             this.comPageSize.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.comPageSize.ItemHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
-            this.comPageSize.ItemSelectForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
+            this.comPageSize.ItemHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(216)))), ((int)(((byte)(241)))));
+            this.comPageSize.ItemRectColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
+            this.comPageSize.ItemSelectBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
+            this.comPageSize.ItemSelectForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(242)))), ((int)(((byte)(251)))));
             this.comPageSize.Location = new System.Drawing.Point(837, 3);
             this.comPageSize.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comPageSize.MinimumSize = new System.Drawing.Size(63, 0);
             this.comPageSize.Name = "comPageSize";
             this.comPageSize.Padding = new System.Windows.Forms.Padding(0, 0, 30, 2);
+            this.comPageSize.RectColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
+            this.comPageSize.ScrollBarBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(242)))), ((int)(((byte)(251)))));
+            this.comPageSize.ScrollBarColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
             this.comPageSize.Size = new System.Drawing.Size(107, 29);
+            this.comPageSize.Style = Sunny.UI.UIStyle.Custom;
             this.comPageSize.SymbolSize = 24;
             this.comPageSize.TabIndex = 21;
             this.comPageSize.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;

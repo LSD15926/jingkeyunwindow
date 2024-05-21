@@ -43,13 +43,17 @@
             // 
             this.uiTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.uiTextBox1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiTextBox1.Location = new System.Drawing.Point(176, 155);
+            this.uiTextBox1.Location = new System.Drawing.Point(182, 156);
             this.uiTextBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.uiTextBox1.MinimumSize = new System.Drawing.Size(1, 16);
             this.uiTextBox1.Name = "uiTextBox1";
             this.uiTextBox1.Padding = new System.Windows.Forms.Padding(5);
+            this.uiTextBox1.RectColor = System.Drawing.Color.Silver;
+            this.uiTextBox1.ScrollBarColor = System.Drawing.Color.Silver;
+            this.uiTextBox1.ScrollBarStyleInherited = false;
             this.uiTextBox1.ShowText = false;
             this.uiTextBox1.Size = new System.Drawing.Size(285, 29);
+            this.uiTextBox1.Style = Sunny.UI.UIStyle.Custom;
             this.uiTextBox1.TabIndex = 0;
             this.uiTextBox1.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.uiTextBox1.Watermark = "请输入充值卡号";
@@ -57,11 +61,11 @@
             // uiLabel1
             // 
             this.uiLabel1.AutoSize = true;
-            this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel1.Location = new System.Drawing.Point(80, 159);
             this.uiLabel1.Name = "uiLabel1";
-            this.uiLabel1.Size = new System.Drawing.Size(90, 21);
+            this.uiLabel1.Size = new System.Drawing.Size(100, 24);
             this.uiLabel1.TabIndex = 1;
             this.uiLabel1.Text = "充值卡号：";
             this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -107,23 +111,23 @@
             // uiLabel2
             // 
             this.uiLabel2.AutoSize = true;
-            this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel2.Location = new System.Drawing.Point(143, 104);
+            this.uiLabel2.Location = new System.Drawing.Point(119, 104);
             this.uiLabel2.Name = "uiLabel2";
-            this.uiLabel2.Size = new System.Drawing.Size(248, 17);
+            this.uiLabel2.Size = new System.Drawing.Size(309, 20);
             this.uiLabel2.TabIndex = 5;
             this.uiLabel2.Text = "充值卡用于激活系统使用权限，具有时效性。";
             this.uiLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // uiSymbolLabel1
             // 
-            this.uiSymbolLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiSymbolLabel1.Location = new System.Drawing.Point(146, 67);
+            this.uiSymbolLabel1.Font = new System.Drawing.Font("微软雅黑", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiSymbolLabel1.Location = new System.Drawing.Point(135, 64);
             this.uiSymbolLabel1.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolLabel1.Name = "uiSymbolLabel1";
             this.uiSymbolLabel1.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
-            this.uiSymbolLabel1.Size = new System.Drawing.Size(249, 24);
+            this.uiSymbolLabel1.Size = new System.Drawing.Size(272, 28);
             this.uiSymbolLabel1.Symbol = 61553;
             this.uiSymbolLabel1.TabIndex = 6;
             this.uiSymbolLabel1.Text = "充值卡，请联系代理商获取！";
@@ -137,10 +141,13 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiTextBox1);
+            this.Font = new System.Drawing.Font("宋体", 13F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TopUp";
+            this.RectColor = System.Drawing.Color.Silver;
+            this.ShowRect = false;
             this.Text = "充值卡充值—系统续费";
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);
             this.panel1.ResumeLayout(false);

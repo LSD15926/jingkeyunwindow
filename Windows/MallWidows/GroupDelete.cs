@@ -1,24 +1,13 @@
 ﻿using jingkeyun.Class;
+using jingkeyun.Data;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pdd_Models;
+using Pdd_Models.Models;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using jingkeyun.Class;
-using jingkeyun.Data;
-using MoreLinq;
-using Pdd_Models.Models;
-using jingkeyun.Data;
-using System.Dynamic;
 
 namespace jingkeyun.Windows
 {
@@ -37,7 +26,7 @@ namespace jingkeyun.Windows
             BackData ReadServerData = Mall_Info.get((int)InitUser.User.UserId);
             if (ReadServerData.Code != 0)
             {
-                UIMessageBox.Show("获取店铺失败！");
+                MyMessageBox.Show("获取店铺失败！");
                 return;
             }
             var json = JsonConvert.SerializeObject(ReadServerData.Data);
@@ -66,7 +55,7 @@ namespace jingkeyun.Windows
             backData = Mall_Group.List(InitUser.User.UserId);
             if (backData.Code != 0)
             {
-                UIMessageBox.ShowError("获取店铺分组出错！");
+                MyMessageBox.ShowError("获取店铺分组出错！");
                 return;
             }
             var json = JsonConvert.SerializeObject(backData.Data);
@@ -106,7 +95,7 @@ namespace jingkeyun.Windows
         }
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if(!UIMessageBox.ShowAsk("是否删除选中的分组？"))
+            if(!MyMessageBox.ShowAsk("是否删除选中的分组？"))
                 return;
             List<string> Ids=getCheck();
             string Sql = "delete u_mall_group where group_id in ("+string.Join(",",Ids)+")";
@@ -121,7 +110,7 @@ namespace jingkeyun.Windows
             }
             else
             {
-                UIMessageBox.ShowError("删除失败！" + backMsg.Mess);
+                MyMessageBox.ShowError("删除失败！" + backMsg.Mess);
             }
         }
 

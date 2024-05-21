@@ -118,17 +118,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  
-  <data name="CloseButton4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CloseButton4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="load" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\load.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="AddIco" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AddIco.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="2a26b6e2-ef32-468c-8602-0614eb6037de" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\signBack.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tishi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tishi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CloseButton4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CloseButton4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="loginBack" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\loginBack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="2a26b6e2-ef32-468c-8602-0614eb6037de" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\signBack.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="succes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\succes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="刷新" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\刷新.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="返回" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\返回.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="前进" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\前进.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

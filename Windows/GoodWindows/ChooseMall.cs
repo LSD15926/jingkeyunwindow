@@ -32,17 +32,12 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel3.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
         }
 
         private void InitMall()
@@ -51,7 +46,7 @@ namespace jingkeyun.Windows
             backData = Mall_Group.List(InitUser.User.UserId);
             if (backData.Code != 0)
             {
-                UIMessageBox.ShowError("获取店铺分组出错！");
+                MyMessageBox.ShowError("获取店铺分组出错！");
                 return;
             }
             var json = JsonConvert.SerializeObject(backData.Data);
@@ -121,7 +116,7 @@ namespace jingkeyun.Windows
 
             if (getCheck() == 0)
             {
-                UIMessageBox.ShowError("至少需选中一个店铺！");
+                MyMessageBox.ShowError("至少需选中一个店铺！");
                 return;
             }
             //更新选中店铺

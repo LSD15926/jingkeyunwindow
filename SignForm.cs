@@ -25,35 +25,34 @@ namespace jingkeyun
         {
             loginForm1 = form;  
             InitializeComponent();
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = Sunny.UI.UIStyle.Purple;
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.HighLigtPurple);
         }
         private bool getModel()
         {
             bool flag=false;
             if (textBoxX4.Text != textBoxX3.Text)
             {
-                UIMessageBox.Show("两次输入的密码不一致！");
+                MyMessageBox.Show("两次输入的密码不一致！");
                 return flag;
             }
             if (string.IsNullOrEmpty(textBoxX5.Text))
             {
-                UIMessageBox.Show("请输入登录账号！");
+                MyMessageBox.Show("请输入登录账号！");
                 return flag;
             }
             if (string.IsNullOrEmpty(textBoxX4.Text))
             {
-                UIMessageBox.Show("请输入登录密码！");
+                MyMessageBox.Show("请输入登录密码！");
                 return flag;
             }
             if (string.IsNullOrEmpty(textBoxX1.Text))
             {
-                UIMessageBox.Show("请输入充值卡号！");
+                MyMessageBox.Show("请输入充值卡号！");
                 return flag;
             }
             if (!IsMobilePhone(textBoxX2.Text))
             {
-                UIMessageBox.Show("请输入正确的手机号码！");
+                MyMessageBox.Show("请输入正确的手机号码！");
                 return flag;
             }
 
@@ -67,16 +66,13 @@ namespace jingkeyun
             return regex.IsMatch(input);
             
         }
-        LoadingForm loading;
         private void uiButton1_Click(object sender, EventArgs e)
         {
             if(!getModel())
             {
                 return;
             }
-            loading=new LoadingForm(this);
-            loading.Location=this.Location;
-            loading.Show();
+            MyMessageBox.ShowLoading(this);
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += Worker_DoWork;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
@@ -85,7 +81,7 @@ namespace jingkeyun
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            loading.Close();
+            MyMessageBox.IsShowLoading=false;
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -108,32 +104,32 @@ namespace jingkeyun
                         {
                             if (backMsg.Mess.Contains("激活成功"))
                             {
-                                UIMessageBox.ShowSuccess("注册成功！");
+                                UIMessageTip.ShowOk("注册成功！");
                             }
                             else
                             {
-                                UIMessageBox.ShowError("账号注册成功，但充值卡激活失败：" + backMsg.Mess);
+                                MyMessageBox.ShowError("账号注册成功，但充值卡激活失败：" + backMsg.Mess);
                             }
                         }
                         else
                         {
-                            UIMessageBox.ShowError("账号注册成功，但充值卡激活失败：" + backMsg.Mess);
+                            MyMessageBox.ShowError("账号注册成功，但充值卡激活失败：" + backMsg.Mess);
                         }
 
                     }
                     else
                     {
-                        UIMessageBox.ShowError("注册失败！" + backMsg.Mess);
+                        MyMessageBox.ShowError("注册失败！" + backMsg.Mess);
                     }
                 }
                 catch (Exception ex)
                 {
-                    UIMessageBox.ShowError("注册失败！" + ex.Message);
+                    MyMessageBox.ShowError("注册失败！" + ex.Message);
                 }
             }
             else
             {
-                UIMessageBox.ShowError("注册失败：" + backMsg.Mess);
+                MyMessageBox.ShowError("注册失败：" + backMsg.Mess);
             }
         }
         private void labelX2_Click(object sender, EventArgs e)

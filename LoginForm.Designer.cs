@@ -61,7 +61,7 @@
             this.panel1.Controls.Add(this.uiSymbolLabel2);
             this.panel1.Controls.Add(this.uiSymbolLabel1);
             this.panel1.Controls.Add(this.labelX1);
-            this.panel1.Location = new System.Drawing.Point(457, 90);
+            this.panel1.Location = new System.Drawing.Point(457, 130);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(321, 330);
             this.panel1.TabIndex = 0;
@@ -228,13 +228,14 @@
             this.AllowShowTitle = false;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::jingkeyun.Properties.Resources.loginBack;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(888, 503);
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LoginForm";
             this.Padding = new System.Windows.Forms.Padding(0);
+            this.ShowRect = false;
             this.ShowTitle = false;
             this.Text = "LoginForm";
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);

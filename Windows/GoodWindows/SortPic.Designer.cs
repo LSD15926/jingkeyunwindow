@@ -40,7 +40,9 @@
             // 
             this.uiImageListBox1.FillColor = System.Drawing.Color.White;
             this.uiImageListBox1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiImageListBox1.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
             this.uiImageListBox1.ItemHeight = 50;
+            this.uiImageListBox1.ItemSelectForeColor = System.Drawing.Color.White;
             this.uiImageListBox1.Location = new System.Drawing.Point(15, 74);
             this.uiImageListBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.uiImageListBox1.MinimumSize = new System.Drawing.Size(1, 1);
@@ -52,7 +54,6 @@
             this.uiImageListBox1.TabIndex = 0;
             this.uiImageListBox1.Text = "uiImageListBox1";
             this.uiImageListBox1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            this.uiImageListBox1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiLabel1
             // 
@@ -67,7 +68,6 @@
             this.uiLabel1.TabIndex = 2;
             this.uiLabel1.Text = "拖拽图片进行排序";
             this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // panel2
             // 
@@ -91,7 +91,6 @@
             this.uiButton2.TabIndex = 6;
             this.uiButton2.Text = "取 消";
             this.uiButton2.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton2.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.uiButton2.Click += new System.EventHandler(this.uiButton2_Click);
             // 
             // uiButton1
@@ -106,20 +105,25 @@
             this.uiButton1.TabIndex = 5;
             this.uiButton1.Text = "提 交";
             this.uiButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.uiButton1.Click += new System.EventHandler(this.uiButton1_Click);
             // 
             // SortPic
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(242)))), ((int)(((byte)(251)))));
             this.ClientSize = new System.Drawing.Size(299, 706);
+            this.ControlBoxFillHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(97)))), ((int)(((byte)(198)))));
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiImageListBox1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SortPic";
+            this.RectColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
+            this.ShowRect = false;
+            this.Style = Sunny.UI.UIStyle.Custom;
             this.Text = "图片排序";
+            this.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);

@@ -13,22 +13,21 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using jingkeyun.Controls;
 using jingkeyun.Data;
+using System.Diagnostics;
+using jingkeyun.Class;
+using System.Data.SQLite;
+using CefSharp.WinForms;
+using CefSharp;
+using Newtonsoft.Json;
 
 namespace jingkeyun.Windows
 {
     public partial class ChangeQuantity : UIForm
     {
 
-        private List<Image> _images=new List<Image>();
+        public List<Goods_detailModel> goods_DetailModels= new List<Goods_detailModel>();
 
-        public List<Image> Images
-        {
-            get { return _images; }
-            set { _images = value; }
-        }
-
-
-        private List<GoodListResponse> _GoodsModel=new List<GoodListResponse>();
+        private List<GoodListResponse> _GoodsModel = new List<GoodListResponse>();
 
         public List<GoodListResponse> GoodsModel
         {
@@ -43,33 +42,37 @@ namespace jingkeyun.Windows
                 int cnt = 0;
                 foreach (var item in _GoodsModel)
                 {
+                    jsQuanModel model = new jsQuanModel(); 
+                    model.thumb_url = item.thumb_url;
+                    model.goods_id=item.goods_id;
+                    model.goods_name=item.goods_name;
+                    model.Mallinfo=item.Mallinfo;
                     for (int i = 0; i < item.sku_list.Count; i++)
                     {
-                        goodSkuQuantity User = new goodSkuQuantity();
-                        if (i == 0)
+                        jsQuanSkuModel model2 = new jsQuanSkuModel();
+                        model2.sku_quantity = item.sku_list[i].sku_quantity;
+                        model2.spec= item.sku_list[i].spec;
+                        model2.sku_id = item.sku_list[i].sku_id;
+                        try
                         {
-                            User.Image = Images[cnt];
-                            User.Title = item.goods_name + "\r\nID:" + item.goods_id;
+                            var d_model = goods_DetailModels.Find(x => x.goods_id == model.goods_id);
+                            var d_sku = d_model.sku_list.Find(x => x.sku_id == item.sku_list[i].sku_id);
+                            model2.thumb_url = d_sku.thumb_url;
                         }
-                        User.Good_id = item.goods_id;
-                        User.Quantity =Convert.ToInt32(item.sku_list[i].sku_quantity);
-                        User.Sku=item.sku_list[i];
-                        string skuName = "";
-                        foreach (var spec in item.sku_list[i].spec_details)
+                        catch
                         {
-                            skuName += "/"+ spec.spec_name;
+                            continue;
                         }
-                        if (!string.IsNullOrEmpty(skuName))
-                        {
-                            User.SkuName = skuName.Substring(1);
-                        }
-                        User.mallinfo=item.Mallinfo;
-                        uiFlowLayoutPanel1.Controls.Add(User);
+
+                        model.sku_list.Add(model2);
+                        cnt++;
                     }
-                    cnt++;
+                    goodSkuQuantities.Add(model);
                 }
+                txtNum.Text = $"商品数:{_GoodsModel.Count}   SKU数:{cnt}";
             }
         }
+        public List<jsQuanModel> goodSkuQuantities = new List<jsQuanModel>();
         public ChangeQuantity()
         {
             InitializeComponent();
@@ -79,29 +82,15 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
-
-            uiButton3.StyleCustomMode = true;
-            uiButton3.Style = UIStyle.Custom;
-            uiButton3.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton4.StyleCustomMode = true;
-            uiButton4.Style = UIStyle.Custom;
-            uiButton4.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton5.StyleCustomMode = true;
-            uiButton5.Style = UIStyle.Custom;
-            uiButton5.FillColor = Color.FromArgb(119, 40, 245);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
+            StyleHelper.SetButtonColor(uiButton3, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton4, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton5, StyleHelper.OkButton);
 
             uiIntegerUpDown1.StyleCustomMode = true;
             uiIntegerUpDown1.Style = UIStyle.Purple;
@@ -115,42 +104,21 @@ namespace jingkeyun.Windows
 
         private void uiButton3_Click(object sender, EventArgs e)
         {
-            foreach(var item in uiFlowLayoutPanel1.Panel.Controls)
-            {
-                if (item.GetType().Name != "goodSkuQuantity")
-                {
-                    continue;
-                }
-                (item as goodSkuQuantity).Quantity=uiIntegerUpDown1.Value;
-            }
+
+            jsObject.editQuantity(Chrome, uiIntegerUpDown1.Value, 0);
             uiIntegerUpDown1.Value = 0;
         }
 
         private void uiButton4_Click(object sender, EventArgs e)
         {
 
-            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-            {
-                if (item.GetType().Name != "goodSkuQuantity")
-                {
-                    continue;
-                }
-                (item as goodSkuQuantity).Quantity += uiIntegerUpDown2.Value;
-            }
+            jsObject.editQuantity(Chrome, uiIntegerUpDown2.Value, 1);
             uiIntegerUpDown2.Value = 0;
         }
 
         private void uiButton5_Click(object sender, EventArgs e)
         {
-            
-            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-            {
-                if (item.GetType().Name != "goodSkuQuantity")
-                {
-                    continue;
-                }
-                (item as goodSkuQuantity).Quantity -= uiIntegerUpDown3.Value;
-            }
+            jsObject.editQuantity(Chrome, uiIntegerUpDown3.Value, 2);
             uiIntegerUpDown3.Value = 0;
         }
 
@@ -161,58 +129,93 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
-            {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<requestQuantity> models = new List<requestQuantity>();
-                long NowGood = 0;
-                long Quantity = 0;
-                foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-                {
-                    if (item.GetType().Name != "goodSkuQuantity")
-                    {
-                        continue;
-                    }
-                    goodSkuQuantity User = (item as goodSkuQuantity);
 
-                    requestQuantity model = new requestQuantity();
-                    model.quantity=User.Quantity;
-                    model.goods_id=User.Good_id;
-                    model.sku_id=User.Sku.sku_id;
-                    model.outer_id=User.Sku.outer_id;
-                    model.Malls=User.mallinfo;
-                    models.Add(model);
-                    if (NowGood != User.Good_id)
+
+            var task = Chrome.EvaluateScriptAsync("postBack()");
+            task.ContinueWith(t => {
+                if (!t.IsFaulted)
+                {
+                    try
                     {
-                        //切换商品
-                        if (NowGood != 0)
+                        var result = t.Result; // 这里的Result就是JavaScript函数返回的值
+
+                        var json = JsonConvert.SerializeObject(result.Result);
+                        List<jsQuanModel> AllItem = JsonConvert.DeserializeObject<List<jsQuanModel>>(json);
+                        List<requestQuantity> models = new List<requestQuantity>();
+
+                        foreach (var item in AllItem)
                         {
-                            GoodsModel.Find(x=>x.goods_id==NowGood).goods_quantity=Quantity;
+                            //获取商品
+                            var good_model = _GoodsModel.Find(x => x.goods_id == item.goods_id);
+                            long cnt = 0;
+                            foreach (var item2 in item.sku_list)
+                            {
+                                //获取sku
+                                var sku_model = good_model.sku_list.Find(x => x.sku_id == item2.sku_id);
+                                cnt += item2.sku_quantity;
+                                if (sku_model.sku_quantity == item2.sku_quantity)//无修改跳过
+                                {
+                                    continue;
+                                }
+                                sku_model.sku_quantity = item2.sku_quantity;
+                                requestQuantity model = new requestQuantity();
+                                model.quantity = item2.sku_quantity;
+                                model.sku_id = item2.sku_id;
+                                model.goods_id = item.goods_id;
+                                model.Malls = item.Mallinfo;
+                                models.Add(model);
+                            }
+                            good_model.goods_quantity = cnt;
                         }
-                        NowGood = User.Good_id;
-                        Quantity = 0;
+                        InitUser.RunningTask.Add("修改库存" + stampNow, stampNow.ToString());
+                        UIMessageTip.ShowOk("已提交至后台处理");
+                        BackgroundWorker worker = new BackgroundWorker();
+                        worker.DoWork += Worker_DoWork;
+                        worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+                        worker.RunWorkerAsync(models);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
                     }
-                    Quantity += model.quantity;
+                    catch (Exception ex)
+                    {
+                        MyMessageBox.ShowError("提交出错！"+ex.Message);
+                    }
+                    
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("修改库存" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改库存");
+        }
 
-                }
-                GoodsModel.Find(x => x.goods_id == NowGood).goods_quantity = Quantity;
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<requestQuantity> models = e.Argument as List<requestQuantity>;
+            RetMsg = Good_Quantity.Update_local(models);
+        }
 
-                BackMsg backMsg = Good_Quantity.Update(models);
-                if (backMsg.Code == 0)
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-                else
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
-                    return;
-                }
-            }
+        private void ChangeQuantity_Load(object sender, EventArgs e)
+        {
+            InitBrowser();
+        }
+        ChromiumWebBrowser Chrome;
+        JsObject_Quantity jsObject = new JsObject_Quantity();
+        public void InitBrowser()
+        {
+            Chrome = new ChromiumWebBrowser(InitUser.pageUrl + "jingkeyun/goodQuantity.html");
+            Chrome.MenuHandler = new MenuHandler();
+            Chrome.KeyboardHandler = new CEFKeyBoardHander();
+            Chrome.BrowserSettings = new BrowserSettings() { WebGl = CefState.Enabled, ImageLoading = CefState.Enabled, RemoteFonts = CefState.Enabled };
+            Chrome.Dock = DockStyle.Fill;
+            CefSharpSettings.WcfEnabled = true;
+            Chrome.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
+            jsObject.f=this;
+            Chrome.JavascriptObjectRepository.Register("boundAsync", jsObject, true, BindingOptions.DefaultBinder);
+            this.panel3.Controls.Add(Chrome);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="packages\CefSharp.Common.123.0.60\build\CefSharp.Common.props" Condition="Exists('packages\CefSharp.Common.123.0.60\build\CefSharp.Common.props')" />
   <Import Project="packages\chromiumembeddedframework.runtime.win-x86.123.0.6\build\chromiumembeddedframework.runtime.win-x86.props" Condition="Exists('packages\chromiumembeddedframework.runtime.win-x86.123.0.6\build\chromiumembeddedframework.runtime.win-x86.props')" />
   <Import Project="packages\chromiumembeddedframework.runtime.win-x64.123.0.6\build\chromiumembeddedframework.runtime.win-x64.props" Condition="Exists('packages\chromiumembeddedframework.runtime.win-x64.123.0.6\build\chromiumembeddedframework.runtime.win-x64.props')" />
@@ -69,8 +70,41 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Http, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Http.8.0.0\lib\net462\Microsoft.Extensions.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.8.0.0\lib\net462\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Options.8.0.0\lib\net462\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Primitives.8.0.0\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="MoreLinq, Version=4.1.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>packages\morelinq.4.1.0\lib\netstandard2.0\MoreLinq.dll</HintPath>
@@ -92,12 +126,25 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlClient, Version=4.6.1.6, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Data.SqlClient.4.8.6\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.SQLite, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SQLite.EF6.1.0.118.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SQLite.Linq.1.0.118.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Design" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.8.0.0\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
@@ -132,19 +179,127 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="zxing, Version=0.16.9.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>packages\ZXing.Net.0.16.9\lib\net47\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.9.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>packages\ZXing.Net.0.16.9\lib\net47\zxing.presentation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\CefSettingClass.cs" />
+    <Compile Include="Class\CefTabPageHelper.cs" />
+    <Compile Include="Class\FileHelper.cs" />
+    <Compile Include="Class\JsObject_Attr.cs" />
+    <Compile Include="Class\JsObject_Quantity.cs" />
+    <Compile Include="Class\JsObject_Good.cs" />
+    <Compile Include="Class\JsObject_SkuName.cs" />
+    <Compile Include="Class\QrCodeHelper.cs" />
+    <Compile Include="Controls\goodCode.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\goodCode.Designer.cs">
+      <DependentUpon>goodCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MaskPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SkuBoxs.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SkuBoxs.Designer.cs">
+      <DependentUpon>SkuBoxs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\goodAttr.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\goodAttr.Designer.cs">
+      <DependentUpon>goodAttr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\skuQuantity.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\skuQuantity.Designer.cs">
+      <DependentUpon>skuQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pinduoduo\FormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pinduoduo\FormBase.Designer.cs">
+      <DependentUpon>FormBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pinduoduo\goodsList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pinduoduo\goodsList.Designer.cs">
+      <DependentUpon>goodsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class\JsObject_Mail.cs" />
+    <Compile Include="UpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateForm.Designer.cs">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GoodWindows\ChangeAttr.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\GoodWindows\ChangeAttr.Designer.cs">
+      <DependentUpon>ChangeAttr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GoodWindows\ChangePreSale.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\GoodWindows\ChangePreSale.Designer.cs">
+      <DependentUpon>ChangePreSale.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GoodWindows\ChangeSkuPre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\GoodWindows\ChangeSkuPre.Designer.cs">
+      <DependentUpon>ChangeSkuPre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class\JsObject_SkuPre.cs" />
+    <Compile Include="Windows\Helper\PictureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Helper\PictureForm.Designer.cs">
+      <DependentUpon>PictureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Helper\BigPictureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Helper\BigPictureForm.Designer.cs">
+      <DependentUpon>BigPictureForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Class\apiHelp.cs" />
     <Compile Include="Class\BrowserHelper.cs" />
     <Compile Include="Class\BsPhp.cs" />
+    <Compile Include="Class\CefLifeSpanHandler.cs" />
     <Compile Include="Class\Class.cs" />
     <Compile Include="Class\Config.cs" />
     <Compile Include="Class\Delegate.cs" />
     <Compile Include="Class\FontHelper.cs" />
     <Compile Include="Class\ImageHelper.cs" />
     <Compile Include="Class\Initialize.cs" />
+    <Compile Include="Class\BigPicHelper.cs" />
+    <Compile Include="Class\MyMessageBox.cs" />
     <Compile Include="Class\SetListConfig.cs" />
     <Compile Include="Class\SignHelper.cs" />
+    <Compile Include="Class\SQLiteHelper.cs" />
+    <Compile Include="Class\StyleHelper.cs" />
     <Compile Include="Controls\AddressBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -184,6 +339,12 @@
     <Compile Include="Controls\goodImages.Designer.cs">
       <DependentUpon>goodImages.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\goodTitleOnly.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\goodTitleOnly.Designer.cs">
+      <DependentUpon>goodTitleOnly.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\skuName.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -214,12 +375,6 @@
     <Compile Include="Data\Good_List.cs" />
     <Compile Include="Data\Mall_Info.cs" />
     <Compile Include="Data\Offend_Word.cs" />
-    <Compile Include="Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form3.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -231,6 +386,17 @@
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pinduoduo\OffendList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pinduoduo\OffendList.Designer.cs">
+      <DependentUpon>OffendList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SignForm.cs">
       <SubType>Form</SubType>
@@ -250,18 +416,18 @@
     <Compile Include="Pinduoduo\mailList.Designer.cs">
       <DependentUpon>mailList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pinduoduo\goodsList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Pinduoduo\goodsList.Designer.cs">
-      <DependentUpon>goodsList.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Windows\LoadingForm.cs">
+    <Compile Include="Windows\Helper\DialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Windows\LoadingForm.Designer.cs">
+    <Compile Include="Windows\Helper\DialogForm.Designer.cs">
+      <DependentUpon>DialogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Helper\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Helper\LoadingForm.Designer.cs">
       <DependentUpon>LoadingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\GoodWindows\ChangeLongPic.cs">
@@ -281,6 +447,18 @@
     </Compile>
     <Compile Include="Windows\GoodWindows\ChangeWritePic.Designer.cs">
       <DependentUpon>ChangeWritePic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Helper\MobilePageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Helper\MobilePageForm.Designer.cs">
+      <DependentUpon>MobilePageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Helper\WebTabPageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Helper\WebTabPageForm.Designer.cs">
+      <DependentUpon>WebTabPageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\MallWidows\GroupDelete.cs">
       <SubType>Form</SubType>
@@ -438,6 +616,93 @@
     <Compile Include="Windows\GoodWindows\SortPic.Designer.cs">
       <DependentUpon>SortPic.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pinduoduo\WebPageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pinduoduo\WebPageForm.Designer.cs">
+      <DependentUpon>WebPageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OffenWindows\OffenAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OffenWindows\OffenAdd.Designer.cs">
+      <DependentUpon>OffenAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditCode.Designer.cs">
+      <DependentUpon>EditCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditCat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditCat.Designer.cs">
+      <DependentUpon>EditCat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditAttr.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditAttr.Designer.cs">
+      <DependentUpon>EditAttr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditQuantity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditQuantity.Designer.cs">
+      <DependentUpon>EditQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditSet.Designer.cs">
+      <DependentUpon>EditSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\OneGood\EditInfo.Designer.cs">
+      <DependentUpon>EditInfo.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Controls\goodCode.resx">
+      <DependentUpon>goodCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SkuBoxs.resx">
+      <DependentUpon>SkuBoxs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\goodAttr.resx">
+      <DependentUpon>goodAttr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\skuQuantity.resx">
+      <DependentUpon>skuQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pinduoduo\goodsList.resx">
+      <DependentUpon>goodsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateForm.resx">
+      <DependentUpon>UpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\GoodWindows\ChangeAttr.resx">
+      <DependentUpon>ChangeAttr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\GoodWindows\ChangePreSale.resx">
+      <DependentUpon>ChangePreSale.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\GoodWindows\ChangeSkuPre.resx">
+      <DependentUpon>ChangeSkuPre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Helper\PictureForm.resx">
+      <DependentUpon>PictureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Helper\BigPictureForm.resx">
+      <DependentUpon>BigPictureForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\AddressBox.resx">
       <DependentUpon>AddressBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -456,6 +721,9 @@
     <EmbeddedResource Include="Controls\goodImages.resx">
       <DependentUpon>goodImages.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\goodTitleOnly.resx">
+      <DependentUpon>goodTitleOnly.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\skuName.resx">
       <DependentUpon>skuName.cs</DependentUpon>
     </EmbeddedResource>
@@ -465,14 +733,14 @@
     <EmbeddedResource Include="Controls\MyPagination.resx">
       <DependentUpon>MyPagination.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pinduoduo\OffendList.resx">
+      <DependentUpon>OffendList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SignForm.resx">
       <DependentUpon>SignForm.cs</DependentUpon>
@@ -483,20 +751,15 @@
     <EmbeddedResource Include="Pinduoduo\mailList.resx">
       <DependentUpon>mailList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pinduoduo\goodsList.resx">
-      <DependentUpon>goodsList.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <EmbeddedResource Include="Windows\LoadingForm.resx">
+    <EmbeddedResource Include="Windows\Helper\DialogForm.resx">
+      <DependentUpon>DialogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Helper\LoadingForm.resx">
       <DependentUpon>LoadingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\GoodWindows\ChangeLongPic.resx">
@@ -507,6 +770,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\GoodWindows\ChangeWritePic.resx">
       <DependentUpon>ChangeWritePic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Helper\MobilePageForm.resx">
+      <DependentUpon>MobilePageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Helper\WebTabPageForm.resx">
+      <DependentUpon>WebTabPageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\MallWidows\GroupDelete.resx">
       <DependentUpon>GroupDelete.cs</DependentUpon>
@@ -586,6 +855,31 @@
     <EmbeddedResource Include="Windows\GoodWindows\SortPic.resx">
       <DependentUpon>SortPic.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pinduoduo\WebPageForm.resx">
+      <DependentUpon>WebPageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OffenWindows\OffenAdd.resx">
+      <DependentUpon>OffenAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OneGood\EditCode.resx">
+      <DependentUpon>EditCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OneGood\EditCat.resx">
+      <DependentUpon>EditCat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OneGood\EditAttr.resx">
+      <DependentUpon>EditAttr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OneGood\EditQuantity.resx">
+      <DependentUpon>EditQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OneGood\EditSet.resx">
+      <DependentUpon>EditSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\OneGood\EditInfo.resx">
+      <DependentUpon>EditInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include=".editorconfig" />
     <None Include="Font\Alibaba_PuHuiTi_2.0_105_Heavy_105_Heavy.ttf" />
     <None Include="Font\Alibaba_PuHuiTi_2.0_115_Black_115_Black.ttf" />
     <None Include="Font\Alibaba_PuHuiTi_2.0_35_Thin_35_Thin.ttf" />
@@ -621,6 +915,13 @@
   <ItemGroup>
     <Content Include="DevComponents.DotNetBar2.dll" />
     <Content Include="favicon.ico" />
+    <None Include="Resources\前进.png" />
+    <None Include="Resources\返回.png" />
+    <None Include="Resources\刷新.png" />
+    <None Include="Resources\load.gif" />
+    <None Include="Resources\tishi.png" />
+    <None Include="Resources\error.png" />
+    <None Include="Resources\succes.png" />
     <None Include="Resources\loginBack.png" />
     <None Include="Resources\AddIco.png" />
     <None Include="Resources\signBack.jpg" />
@@ -651,6 +952,11 @@
     <Error Condition="!Exists('packages\chromiumembeddedframework.runtime.win-x86.123.0.6\build\chromiumembeddedframework.runtime.win-x86.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\chromiumembeddedframework.runtime.win-x86.123.0.6\build\chromiumembeddedframework.runtime.win-x86.props'))" />
     <Error Condition="!Exists('packages\CefSharp.Common.123.0.60\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Common.123.0.60\build\CefSharp.Common.props'))" />
     <Error Condition="!Exists('packages\CefSharp.Common.123.0.60\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Common.123.0.60\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
   </Target>
   <Import Project="packages\CefSharp.Common.123.0.60\build\CefSharp.Common.targets" Condition="Exists('packages\CefSharp.Common.123.0.60\build\CefSharp.Common.targets')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
 </Project>

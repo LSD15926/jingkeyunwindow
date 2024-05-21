@@ -28,36 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // backgroundWorker1
-            // 
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(395, 285);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
             // 
             // Form3
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1321, 580);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(1549, 768);
             this.Name = "Form3";
             this.Text = "Form3";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MobilePageForm_FormClosing);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.Label label1;
     }
 }

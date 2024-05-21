@@ -38,14 +38,11 @@ namespace jingkeyun
             uiSymbolLabel2.ForeColor = Color.White;
             uiSymbolLabel2.SymbolColor = Color.White;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = Sunny.UI.UIStyle.Custom;
-            uiButton1.ForeColor = Color.Purple;
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.HighLigtPurple);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.HighLigtPurple);
 
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = Sunny.UI.UIStyle.Purple;
         }
-        LoadingForm loading;
+        
         private void uiButton1_Click(object sender, EventArgs e)
         {
             //立即登录
@@ -54,9 +51,7 @@ namespace jingkeyun
                 UIMessageTip.ShowError("账号或密码不能为空!");
                 return;
             }
-            loading = new LoadingForm(this);
-            loading.Location = this.Location;
-            loading.Show();
+            MyMessageBox.ShowLoading(this);
             backgroundWorker1.RunWorkerAsync();
         }
 
@@ -70,23 +65,21 @@ namespace jingkeyun
 
         private void labelX3_Click(object sender, EventArgs e)
         {
-           Application.Exit();  
+            Application.Exit();
         }
 
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            if (!UIMessageBox.ShowAsk("解绑会扣除1天系统使用时间，是否继续？"))
+            if (!MyMessageBox.ShowAsk("解绑会扣除【1天】系统使用时间，是否继续？"))
             {
-                return ;
+                return;
             }
             if (string.IsNullOrEmpty(textBoxX1.Text) || string.IsNullOrEmpty(textBoxX2.Text))
             {
                 UIMessageTip.ShowError("账号或密码不能为空!");
                 return;
             }
-            loading = new LoadingForm(this);
-            loading.Location = this.Location;
-            loading.Show();
+            MyMessageBox.ShowLoading(this);
             backgroundWorker2.RunWorkerAsync();
         }
 
@@ -102,12 +95,12 @@ namespace jingkeyun
                 UIMessageTip.ShowError("账号或密码不能为空!");
                 return;
             }
-            TopUp form=new TopUp();
+            TopUp form = new TopUp();
             form.UserName = textBoxX1.Text;
             form.UserPsw = textBoxX2.Text;
             form.ShowDialog();
         }
-        bool succ=false;
+        bool succ = false;
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             //验证账号登录
@@ -127,7 +120,7 @@ namespace jingkeyun
                             if (info.Count != 3)
                             {
                                 //loading.Close();
-                                UIMessageBox.ShowError("获取用户信息失败！" + backMsg.Mess);
+                                MyMessageBox.ShowError("获取用户信息失败！" + backMsg.Mess);
                                 return;
                             }
                             LoginUser loginUser = new LoginUser();
@@ -148,40 +141,48 @@ namespace jingkeyun
                                     SetListConfig.SetConfig("psw", textBoxX2.Text.Trim());
                                     SetListConfig.SetConfig("Remember", "记住密码");
                                 }
-                                succ=true;
+                                succ = true;
+                            }
+                            else
+                            {
+                                MyMessageBox.IsShowLoading = false;
+                                MyMessageBox.ShowError("登录失败！" + backMsg.Mess);
                             }
                         }
                         catch (Exception ex)
                         {
-                            UIMessageBox.ShowError("获取用户信息失败！" + ex.Message);
+                            MyMessageBox.IsShowLoading = false;
+                            MyMessageBox.ShowError("获取用户信息失败！" + ex.Message);
                         }
                     }
                     else
                     {
-                        UIMessageBox.ShowError("获取用户信息失败！" + backMsg.Mess);
+                        MyMessageBox.IsShowLoading = false;
+                        MyMessageBox.ShowError("获取用户信息失败！" + backMsg.Mess);
                     }
 
                 }
                 else if (backMsg.Mess.Contains("9908"))
                 {
-                    UIMessageBox.Show("你的帐号已经到期了哦,请续费");
-                    return;
+                    MyMessageBox.IsShowLoading = false;
+                    MyMessageBox.Show("你的帐号已经到期了哦,请续费");
                 }
                 else
                 {
-                    UIMessageBox.Show(backMsg.Mess);
-                    return;
+                    MyMessageBox.IsShowLoading = false;
+                    MyMessageBox.Show(backMsg.Mess);
                 }
             }
             else
             {
-                UIMessageBox.ShowError("登录失败！" + backMsg.Mess);
+                MyMessageBox.IsShowLoading = false;
+                MyMessageBox.ShowError("登录失败！" + backMsg.Mess);
             }
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            loading.Close();
+            MyMessageBox.IsShowLoading=false;
             if (succ)
             {
                 succ = false;
@@ -204,18 +205,20 @@ namespace jingkeyun
                 }
                 else
                 {
-                    UIMessageBox.ShowError("解绑失败！" + backMsg.Mess);
+                    MyMessageBox.IsShowLoading = false;
+                    MyMessageBox.ShowError("解绑失败！" + backMsg.Mess);
                 }
             }
             else
             {
-                UIMessageBox.ShowError("解绑失败！" + backMsg.Mess);
+                MyMessageBox.IsShowLoading = false;
+                UIMessageTip.ShowError("解绑失败！" + backMsg.Mess);
             }
         }
 
         private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            loading.Close();
+            MyMessageBox.IsShowLoading = false;
         }
     }
 }

@@ -15,19 +15,16 @@ using jingkeyun.Controls;
 using jingkeyun.Data;
 using MoreLinq;
 using Newtonsoft.Json;
+using jingkeyun.Class;
+using Sunny.UI.Win32;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using CefSharp.WinForms;
+using CefSharp;
 
 namespace jingkeyun.Windows
 {
     public partial class ChangeSkuName : UIForm
     {
-
-        private List<Image> _images = new List<Image>();
-
-        public List<Image> Images
-        {
-            get { return _images; }
-            set { _images = value; }
-        }
 
         public List<Goods_detailModel> goods_DetailModels { get; set; }
 
@@ -43,33 +40,60 @@ namespace jingkeyun.Windows
             {
                 _GoodsModel = value;
                 //渲染页面
-                int cnt = 0;
                 foreach (var item in _GoodsModel)
                 {
-                    List<SpecItem> _specItems = new List<SpecItem>();
-
-                    foreach (var item2 in item.sku_list)
+                    jsSkuNameModel model= new jsSkuNameModel();
+                    model.goods_id = item.goods_id;
+                    model.goods_name = item.goods_name;
+                    model.thumb_url = item.thumb_url;
+                    model.Mallinfo = item.Mallinfo;
+                    Goods_detailModel detailModel = goods_DetailModels.Find(x => x.goods_id == item.goods_id);
+                    jsSkuName_spec spec1 = new jsSkuName_spec();
+                    jsSkuName_spec spec2 = new jsSkuName_spec();
+                    if (detailModel.sku_list[0].spec.Count == 2)
                     {
-                        if(item2.spec_details!=null)
-                            _specItems.AddRange(item2.spec_details);
-                    }
-                    var NewSpec = _specItems.DistinctBy(x => x.spec_id).ToList();
+                        spec1.spec = detailModel.sku_list[0].spec[0].parent_name;
+                        spec2.spec = detailModel.sku_list[0].spec[1].parent_name;
+                        spec1.spec_id= (long)detailModel.sku_list[0].spec[0].parent_id;
+                        spec2.spec_id = (long)detailModel.sku_list[0].spec[1].parent_id;
+                        List<SpecItem> _specItems = new List<SpecItem>();
+                        foreach (var item2 in detailModel.sku_list)
+                        {
+                            if (item2.spec != null)
+                                _specItems.AddRange(item2.spec);
+                        }
+                        var NewSpec = _specItems.DistinctBy(x => x.spec_id).ToList();
 
-                    foreach (var item3 in NewSpec)
-                    {
-                        skuName User = new skuName();
-                        User.Image = Images[cnt];
-                        User.Title = item.goods_name + "\r\nID:" + item.goods_id;
-                        User.NewTitle = item3.spec_name;
-                        User.specItem = item3;
-                        User.mallinfo=item.Mallinfo;
-                        uiFlowLayoutPanel1.Controls.Add(User);
+                        long Pid = (long)detailModel.sku_list[0].spec[0].parent_id;
+                        for (int i = 0; i < NewSpec.Count; i++)
+                        {
+                            jsSkuName_spec_list jsSkuName_Spec_List = new jsSkuName_spec_list();
+                            jsSkuName_Spec_List.name= NewSpec[i].spec_name;
+                            jsSkuName_Spec_List.id= NewSpec[i].spec_id;
+                            if (Pid == (long)NewSpec[i].parent_id)
+                                spec1.SpecList.Add(jsSkuName_Spec_List);
+                            else
+                                spec2.SpecList.Add(jsSkuName_Spec_List);
+                        }
+                        model.sku_specs.Add(spec1);
+                        model.sku_specs.Add(spec2);
                     }
-                    
-                    cnt++;
+                    else
+                    {
+                        spec1.spec = detailModel.sku_list[0].spec[0].parent_name;
+                        foreach (var sku in detailModel.sku_list)
+                        {
+                            jsSkuName_spec_list jsSkuName_Spec_List = new jsSkuName_spec_list();
+                            jsSkuName_Spec_List.name = sku.spec[0].spec_name;
+                            spec1.SpecList.Add(jsSkuName_Spec_List);
+                        }
+                        model.sku_specs.Add(spec1);
+                    }
+                    jsSkuNameModels.Add(model);
                 }
             }
         }
+        public List<jsSkuNameModel> jsSkuNameModels= new List<jsSkuNameModel>();
         public ChangeSkuName()
         {
             InitializeComponent();
@@ -79,84 +103,35 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             panel2.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
-
-            uiButton3.StyleCustomMode = true;
-            uiButton3.Style = UIStyle.Custom;
-            uiButton3.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton4.StyleCustomMode = true;
-            uiButton4.Style = UIStyle.Custom;
-            uiButton4.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton5.StyleCustomMode = true;
-            uiButton5.Style = UIStyle.Custom;
-            uiButton5.FillColor = Color.FromArgb(119, 40, 245);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
+            StyleHelper.SetButtonColor(uiButton3, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton4, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton5, StyleHelper.OkButton);
 
         }
 
         private void uiButton3_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtOld.Text))
-            {
-                return;
-            }
-            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-            {
-                if (item.GetType().Name != "skuName")
-                {
-                    continue;
-                }
-                (item as skuName).NewTitle = (item as skuName).NewTitle.Replace(txtOld.Text, txtNew.Text);
-
-            }
+            jsObject.editQuantity(Chrome, txtOld.Text, txtNew.Text, 0);
             txtOld.Text = "";
-            txtOld.Text = "";
+            txtNew.Text = "";
         }
 
         private void uiButton4_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtBegin.Text))
-            {
-                return;
-            }
-
-            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-            {
-                if (item.GetType().Name != "skuName")
-                {
-                    continue;
-                }
-                (item as skuName).NewTitle = txtBegin.Text + (item as skuName).NewTitle;
-            }
+            jsObject.editQuantity(Chrome, txtBegin.Text, "", 1);
             txtBegin.Text = "";
 
         }
 
         private void uiButton5_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtEnd.Text))
-            {
-                return;
-            }
-            foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
-            {
-                if (item.GetType().Name != "skuName")
-                {
-                    continue;
-                }
-                (item as skuName).NewTitle = (item as skuName).NewTitle + txtEnd.Text;
-            }
+            jsObject.editQuantity(Chrome, txtEnd.Text, "", 2);
             txtEnd.Text = "";
         }
 
@@ -167,75 +142,115 @@ namespace jingkeyun.Windows
 
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("是否提交修改？"))
-            {
-                new UIPage().ShowProcessForm();
-                //获取提交请求列表
-                List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
-                List<SpecItem> OldSpec=new List<SpecItem>();
-                List<SpecItem> NewSpec=new List<SpecItem>();
-                foreach (var item in uiFlowLayoutPanel1.Panel.Controls)
+            var task = Chrome.EvaluateScriptAsync("postBack()");
+            task.ContinueWith(t => {
+                if (!t.IsFaulted)
                 {
-                    if (item.GetType().Name != "skuName")
+                    try
                     {
-                        continue;
-                    }
-                    skuName User = (item as skuName);
-                    //判断是否发生修改
-                    if (User.specItem.spec_name != User.NewTitle)
-                    {
+                        var result = t.Result; // 这里的Result就是JavaScript函数返回的值
+                        if (!result.Success)
+                        {
+                            MyMessageBox.ShowError("提交失败"+result.Message);
+                        }
+                        var json = JsonConvert.SerializeObject(result.Result);
+                        List<jsSkuNameModel> AllItem = JsonConvert.DeserializeObject<List<jsSkuNameModel>>(json);
 
-                        OldSpec.Add(User.specItem);
-                        //请求生成新的spec
-                        BackMsg msg = Good_Spec.Get(User.specItem.parent_id.ToString(),User.NewTitle,User.mallinfo.mall_token);
+                        stampNow = MyConvert.ToTimeStamp(DateTime.Now);
+                        InitUser.RunningTask.Add("SKU名称" + stampNow, stampNow.ToString());
+                        UIMessageTip.ShowOk("已提交至后台处理");
+                        BackgroundWorker worker = new BackgroundWorker();
+                        worker.DoWork += Worker_DoWork;
+                        worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+                        worker.RunWorkerAsync(AllItem);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MyMessageBox.ShowError("提交出错！" + ex.Message);
+                    }
+
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        BackMsg RetMsg;
+        private long stampNow;
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitUser.RunningTask.Remove("SKU名称" + stampNow);
+            MyMessageBox.showCheck(RetMsg.Mess, "修改SKU名称");
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+             
+            List<jsSkuNameModel> AllItem = e.Argument as List<jsSkuNameModel>;
+
+            List<RequstGoodEditModel> models = new List<RequstGoodEditModel>();
+
+            for (int i = 0;i<AllItem.Count;i++)
+            {
+                //获取sku
+                Goods_detailModel goods = goods_DetailModels.Find(x => x.goods_id == AllItem[i].goods_id);
+                bool flag = false;
+                for (int j = 0; j < AllItem[i].sku_specs.Count; j++)
+                {
+                    for (int k = 0; k < AllItem[i].sku_specs[j].SpecList.Count; k++)
+                    {
+                        if (jsSkuNameModels[i].sku_specs[j].SpecList[k].name== AllItem[i].sku_specs[j].SpecList[k].name)
+                        {
+                            continue;
+                        }
+                        BackMsg msg = Good_Spec.Get(AllItem[i].sku_specs[j].spec_id.ToString(), AllItem[i].sku_specs[j].SpecList[k].name, AllItem[i].Mallinfo.mall_token);
                         if (msg.Code == 0)
                         {
                             SpecItem spec = JsonConvert.DeserializeObject<SpecItem>(msg.Mess);
-                            NewSpec.Add(spec);
-                        }
-                    }
-                }
-                //获取修改对象
-                foreach (var model in GoodsModel)
-                {
-                    var Detail = goods_DetailModels.Find(x => x.goods_id == model.goods_id);
-                    RequstGoodEditModel requst=new RequstGoodEditModel();
-                    requst.ApiType = (int)GoodsEdit.sku名称;
-                    requst.goods_id= model.goods_id;
-                    requst.sku_list = Detail.sku_list;
-                    requst.Malls = Detail.mall;
-                    //替换sku
-                    for (int i = 0; i < requst.sku_list.Count; i++)
-                    {
-                        for (int j = 0; j < requst.sku_list[i].spec.Count; j++)
-                        {
-                            int number = OldSpec.FindIndex(x => x.spec_id == requst.sku_list[i].spec[j].spec_id);
-                            if (number > -1)
+                            //long specId = ((C as UITextBox).Tag as SpecItem).spec_id;
+                            foreach (var item2 in goods.sku_list)
                             {
-                                requst.sku_list[i].spec[j].spec_id = NewSpec[number].spec_id;
-                                requst.sku_list[i].spec[j].spec_name = NewSpec[number].spec_name;
+                                int index = item2.spec.FindIndex(x => x.spec_id == AllItem[i].sku_specs[j].SpecList[k].id);
+                                if (index != -1)
+                                {
+                                    item2.spec[index].spec_id = spec.spec_id;
+                                    item2.spec[index].spec_name = spec.spec_name;
+                                }
                             }
+                            flag = true;
                         }
                     }
-                    Detail.sku_list=requst.sku_list;
-                    models.Add(requst);
                 }
-
-                BackMsg backMsg = Good_Edit.Edit(models);
-                if (backMsg.Code == 0)
+                if (flag)
                 {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowSuccess("修改成功！");
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }
-                else
-                {
-                    new UIPage().HideProcessForm();
-                    UIMessageBox.ShowError("出现错误！" + backMsg.Mess);
-                    return;
+                    RequstGoodEditModel model= new RequstGoodEditModel();
+                    model.goods_id= AllItem[i].goods_id;
+                    model.Malls= AllItem[i].Mallinfo;
+                    model.ApiType = (int)GoodsEdit.sku名称;
+                    model.sku_list=goods.sku_list;
+                    models.Add(model);
                 }
             }
+            RetMsg = Good_Edit.Edit(models);
+        }
+
+        private void ChangeSkuName_Load(object sender, EventArgs e)
+        {
+            InitBrowser();
+        }
+        ChromiumWebBrowser Chrome;
+        JsObject_SkuName jsObject = new JsObject_SkuName();
+        public void InitBrowser()
+        {
+            Chrome = new ChromiumWebBrowser(InitUser.pageUrl + "jingkeyun/goodSkuName.html");
+            Chrome.MenuHandler = new MenuHandler();
+            Chrome.KeyboardHandler = new CEFKeyBoardHander();
+            Chrome.BrowserSettings = new BrowserSettings() { WebGl = CefState.Enabled, ImageLoading = CefState.Enabled, RemoteFonts = CefState.Enabled };
+            Chrome.Dock = DockStyle.Fill;
+            CefSharpSettings.WcfEnabled = true;
+            Chrome.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
+            jsObject.f = this;
+            Chrome.JavascriptObjectRepository.Register("boundAsync", jsObject, true, BindingOptions.DefaultBinder);
+            this.panelMain.Controls.Add(Chrome);
         }
     }
 }

@@ -46,61 +46,63 @@
             this.ddlTemp.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
             this.ddlTemp.FillColor = System.Drawing.Color.White;
             this.ddlTemp.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ddlTemp.ItemHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
+            this.ddlTemp.ItemSelectForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
             this.ddlTemp.Location = new System.Drawing.Point(115, 99);
             this.ddlTemp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ddlTemp.MinimumSize = new System.Drawing.Size(63, 0);
             this.ddlTemp.Name = "ddlTemp";
             this.ddlTemp.Padding = new System.Windows.Forms.Padding(0, 0, 30, 2);
             this.ddlTemp.Size = new System.Drawing.Size(186, 32);
+            this.ddlTemp.SymbolSize = 24;
             this.ddlTemp.TabIndex = 11;
             this.ddlTemp.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.ddlTemp.Watermark = "请选择";
-            this.ddlTemp.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.ddlTemp.SelectedIndexChanged += new System.EventHandler(this.ddlTemp_SelectedIndexChanged);
             // 
             // uiLabel4
             // 
             this.uiLabel4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel4.Location = new System.Drawing.Point(29, 104);
             this.uiLabel4.Name = "uiLabel4";
             this.uiLabel4.Size = new System.Drawing.Size(100, 23);
             this.uiLabel4.TabIndex = 10;
             this.uiLabel4.Text = "运费模板：";
             this.uiLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel4.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiLabel1
             // 
             this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel1.Location = new System.Drawing.Point(29, 56);
             this.uiLabel1.Name = "uiLabel1";
             this.uiLabel1.Size = new System.Drawing.Size(100, 23);
             this.uiLabel1.TabIndex = 12;
             this.uiLabel1.Text = "已选商品：";
             this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiLabel2
             // 
             this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel2.Location = new System.Drawing.Point(111, 56);
             this.uiLabel2.Name = "uiLabel2";
             this.uiLabel2.Size = new System.Drawing.Size(100, 23);
             this.uiLabel2.TabIndex = 13;
             this.uiLabel2.Text = "0";
             this.uiLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel2.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // uiLabel3
             // 
             this.uiLabel3.AutoSize = true;
             this.uiLabel3.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.uiLabel3.Location = new System.Drawing.Point(308, 104);
             this.uiLabel3.Name = "uiLabel3";
             this.uiLabel3.Size = new System.Drawing.Size(0, 21);
             this.uiLabel3.TabIndex = 14;
             this.uiLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiLabel3.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             // 
             // panel2
             // 
@@ -124,7 +126,6 @@
             this.uiButton2.TabIndex = 6;
             this.uiButton2.Text = "取 消";
             this.uiButton2.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton2.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.uiButton2.Click += new System.EventHandler(this.uiButton2_Click);
             // 
             // uiButton1
@@ -139,7 +140,6 @@
             this.uiButton1.TabIndex = 5;
             this.uiButton1.Text = "提 交";
             this.uiButton1.TipsFont = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton1.ZoomScaleRect = new System.Drawing.Rectangle(0, 0, 0, 0);
             this.uiButton1.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // ChangeTemplate
@@ -153,7 +153,11 @@
             this.Controls.Add(this.ddlTemp);
             this.Controls.Add(this.uiLabel4);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ChangeTemplate";
+            this.ShowRect = false;
+            this.Style = Sunny.UI.UIStyle.Custom;
             this.Text = "批量修改运费模板";
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChangeTemplate_FormClosing);

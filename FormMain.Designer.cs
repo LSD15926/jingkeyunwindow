@@ -33,6 +33,7 @@
             this.uiLabel3 = new Sunny.UI.UILabel();
             this.uiLabel1 = new Sunny.UI.UILabel();
             this.uiPanel1 = new Sunny.UI.UIPanel();
+            this.uiSymbolLabel8 = new Sunny.UI.UISymbolLabel();
             this.txtExpire = new DevComponents.DotNetBar.LabelX();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
@@ -40,6 +41,7 @@
             this.uiSymbolLabel4 = new Sunny.UI.UISymbolLabel();
             this.uiSymbolLabel5 = new Sunny.UI.UISymbolLabel();
             this.uiSymbolLabel3 = new Sunny.UI.UISymbolLabel();
+            this.uiSymbolLabel7 = new Sunny.UI.UISymbolLabel();
             this.uiSymbolLabel2 = new Sunny.UI.UISymbolLabel();
             this.uiSymbolLabel1 = new Sunny.UI.UISymbolLabel();
             this.uiPanel2 = new Sunny.UI.UIPanel();
@@ -88,6 +90,7 @@
             // uiPanel1
             // 
             this.uiPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(77)))), ((int)(((byte)(160)))));
+            this.uiPanel1.Controls.Add(this.uiSymbolLabel8);
             this.uiPanel1.Controls.Add(this.txtExpire);
             this.uiPanel1.Controls.Add(this.labelX3);
             this.uiPanel1.Controls.Add(this.labelX2);
@@ -95,6 +98,7 @@
             this.uiPanel1.Controls.Add(this.uiSymbolLabel4);
             this.uiPanel1.Controls.Add(this.uiSymbolLabel5);
             this.uiPanel1.Controls.Add(this.uiSymbolLabel3);
+            this.uiPanel1.Controls.Add(this.uiSymbolLabel7);
             this.uiPanel1.Controls.Add(this.uiSymbolLabel2);
             this.uiPanel1.Controls.Add(this.uiSymbolLabel1);
             this.uiPanel1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -112,6 +116,27 @@
             this.uiPanel1.TabIndex = 9;
             this.uiPanel1.Text = null;
             this.uiPanel1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // uiSymbolLabel8
+            // 
+            this.uiSymbolLabel8.BackColor = System.Drawing.Color.Transparent;
+            this.uiSymbolLabel8.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiSymbolLabel8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.uiSymbolLabel8.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiSymbolLabel8.ForeColor = System.Drawing.Color.White;
+            this.uiSymbolLabel8.Location = new System.Drawing.Point(0, 350);
+            this.uiSymbolLabel8.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiSymbolLabel8.Name = "uiSymbolLabel8";
+            this.uiSymbolLabel8.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
+            this.uiSymbolLabel8.Size = new System.Drawing.Size(159, 50);
+            this.uiSymbolLabel8.Style = Sunny.UI.UIStyle.Custom;
+            this.uiSymbolLabel8.StyleCustomMode = true;
+            this.uiSymbolLabel8.Symbol = 559568;
+            this.uiSymbolLabel8.SymbolColor = System.Drawing.Color.White;
+            this.uiSymbolLabel8.TabIndex = 12;
+            this.uiSymbolLabel8.Tag = "2";
+            this.uiSymbolLabel8.Text = "违规词库";
+            this.uiSymbolLabel8.Click += new System.EventHandler(this.uiSymbolLabel1_Click);
             // 
             // txtExpire
             // 
@@ -156,7 +181,7 @@
             this.uiSymbolLabel6.Dock = System.Windows.Forms.DockStyle.Top;
             this.uiSymbolLabel6.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolLabel6.ForeColor = System.Drawing.Color.White;
-            this.uiSymbolLabel6.Location = new System.Drawing.Point(0, 250);
+            this.uiSymbolLabel6.Location = new System.Drawing.Point(0, 300);
             this.uiSymbolLabel6.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolLabel6.Name = "uiSymbolLabel6";
             this.uiSymbolLabel6.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
@@ -166,7 +191,7 @@
             this.uiSymbolLabel6.Symbol = 362925;
             this.uiSymbolLabel6.SymbolColor = System.Drawing.Color.White;
             this.uiSymbolLabel6.TabIndex = 7;
-            this.uiSymbolLabel6.Tag = "5";
+            this.uiSymbolLabel6.Tag = "3";
             this.uiSymbolLabel6.Text = "系统设置";
             this.uiSymbolLabel6.Visible = false;
             this.uiSymbolLabel6.Click += new System.EventHandler(this.uiSymbolLabel1_Click);
@@ -178,7 +203,7 @@
             this.uiSymbolLabel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.uiSymbolLabel4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolLabel4.ForeColor = System.Drawing.Color.White;
-            this.uiSymbolLabel4.Location = new System.Drawing.Point(0, 200);
+            this.uiSymbolLabel4.Location = new System.Drawing.Point(0, 250);
             this.uiSymbolLabel4.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolLabel4.Name = "uiSymbolLabel4";
             this.uiSymbolLabel4.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
@@ -200,7 +225,7 @@
             this.uiSymbolLabel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.uiSymbolLabel5.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolLabel5.ForeColor = System.Drawing.Color.White;
-            this.uiSymbolLabel5.Location = new System.Drawing.Point(0, 150);
+            this.uiSymbolLabel5.Location = new System.Drawing.Point(0, 200);
             this.uiSymbolLabel5.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolLabel5.Name = "uiSymbolLabel5";
             this.uiSymbolLabel5.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
@@ -222,7 +247,7 @@
             this.uiSymbolLabel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.uiSymbolLabel3.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiSymbolLabel3.ForeColor = System.Drawing.Color.White;
-            this.uiSymbolLabel3.Location = new System.Drawing.Point(0, 100);
+            this.uiSymbolLabel3.Location = new System.Drawing.Point(0, 150);
             this.uiSymbolLabel3.MinimumSize = new System.Drawing.Size(1, 1);
             this.uiSymbolLabel3.Name = "uiSymbolLabel3";
             this.uiSymbolLabel3.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
@@ -236,6 +261,28 @@
             this.uiSymbolLabel3.Text = "运营管理";
             this.uiSymbolLabel3.Visible = false;
             this.uiSymbolLabel3.Click += new System.EventHandler(this.uiSymbolLabel1_Click);
+            // 
+            // uiSymbolLabel7
+            // 
+            this.uiSymbolLabel7.BackColor = System.Drawing.Color.Transparent;
+            this.uiSymbolLabel7.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiSymbolLabel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.uiSymbolLabel7.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiSymbolLabel7.ForeColor = System.Drawing.Color.White;
+            this.uiSymbolLabel7.Location = new System.Drawing.Point(0, 100);
+            this.uiSymbolLabel7.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiSymbolLabel7.Name = "uiSymbolLabel7";
+            this.uiSymbolLabel7.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
+            this.uiSymbolLabel7.Size = new System.Drawing.Size(159, 50);
+            this.uiSymbolLabel7.Style = Sunny.UI.UIStyle.Custom;
+            this.uiSymbolLabel7.StyleCustomMode = true;
+            this.uiSymbolLabel7.Symbol = 61447;
+            this.uiSymbolLabel7.SymbolColor = System.Drawing.Color.White;
+            this.uiSymbolLabel7.TabIndex = 11;
+            this.uiSymbolLabel7.Tag = "2";
+            this.uiSymbolLabel7.Text = "店铺后台";
+            this.uiSymbolLabel7.Visible = false;
+            this.uiSymbolLabel7.Click += new System.EventHandler(this.uiSymbolLabel1_Click);
             // 
             // uiSymbolLabel2
             // 
@@ -381,6 +428,7 @@
             this.Controls.Add(this.uiPanel1);
             this.Controls.Add(this.uiLabel1);
             this.Controls.Add(this.uiLabel3);
+            this.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.Padding = new System.Windows.Forms.Padding(0, 50, 0, 0);
@@ -395,6 +443,7 @@
             this.ZoomScaleRect = new System.Drawing.Rectangle(15, 15, 800, 450);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.uiPanel1.ResumeLayout(false);
             this.uiPanel1.PerformLayout();
             this.uiPanel2.ResumeLayout(false);
@@ -425,5 +474,7 @@
         private DevComponents.DotNetBar.LabelX labelX3;
         private DevComponents.DotNetBar.LabelX txtExpire;
         private System.Windows.Forms.Timer timer1;
+        public Sunny.UI.UISymbolLabel uiSymbolLabel7;
+        private Sunny.UI.UISymbolLabel uiSymbolLabel8;
     }
 }

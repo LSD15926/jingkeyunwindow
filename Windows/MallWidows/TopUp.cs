@@ -1,21 +1,10 @@
 ﻿using BsPhpHelper;
 using jingkeyun.Class;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Pdd_Models;
 using Sunny.UI;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using jingkeyun.Class;
-using jingkeyun.Data;
 
 namespace jingkeyun.Windows
 {
@@ -32,7 +21,7 @@ namespace jingkeyun.Windows
         {
             this.StyleCustomMode = true;
             this.Style = Sunny.UI.UIStyle.Custom;
-            this.TitleColor = Color.FromArgb(137, 113, 179);
+            this.TitleColor = StyleHelper.Title;
 
             uiSymbolLabel1.StyleCustomMode = true;
             uiSymbolLabel1.Style = UIStyle.Custom;
@@ -41,13 +30,8 @@ namespace jingkeyun.Windows
 
             panel1.BackColor = this.TitleColor;
 
-            uiButton1.StyleCustomMode = true;
-            uiButton1.Style = UIStyle.Custom;
-            uiButton1.FillColor = Color.FromArgb(119, 40, 245);
-
-            uiButton2.StyleCustomMode = true;
-            uiButton2.Style = UIStyle.Custom;
-            uiButton2.FillColor = Color.FromArgb(184, 134, 248);
+            StyleHelper.SetButtonColor(uiButton1, StyleHelper.OkButton);
+            StyleHelper.SetButtonColor(uiButton2, StyleHelper.CancelButton);
 
         }
         private void uiButton2_Click(object sender, EventArgs e)
@@ -59,7 +43,7 @@ namespace jingkeyun.Windows
         {
             if (string.IsNullOrEmpty(uiTextBox1.Text))
             {
-                UIMessageBox.ShowError("请输入充值卡号！");
+                MyMessageBox.ShowError("请输入充值卡号！");
                 return;
             }
             //接口验证卡密有效性
@@ -77,19 +61,19 @@ namespace jingkeyun.Windows
             {
                 if (backMsg.Mess.Contains("激活成功"))
                 {
-                    UIMessageBox.ShowSuccess("充值成功！");
+                    UIMessageTip.ShowOk("充值成功！");
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    UIMessageBox.ShowError("充值卡激活失败：" + backMsg.Mess);
+                    MyMessageBox.ShowError("充值卡激活失败：" + backMsg.Mess);
                 }
 
             }
             else
             {
-                UIMessageBox.ShowError("充值失败!" + backMsg.Mess);
+                MyMessageBox.ShowError("充值失败!" + backMsg.Mess);
                 return;
             }
 
