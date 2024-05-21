@@ -60,8 +60,6 @@ namespace jingkeyun.Pinduoduo
             }
             MyMessageBox.IsShowLoading=false;
             列表.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView_RowPostPaint);
-            
-            //UpdLog($"成功读取{列表.Rows.Count}个店铺！");
         }
 
         private void dataGridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
